@@ -19,118 +19,28 @@ class HomeScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.purple,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Text(
-                    'Tất cả',
-                    style: TextStyle(color: Colors.black, fontSize: 12),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.purple,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Text(
-                    'Học tập',
-                    style: TextStyle(color: Colors.black, fontSize: 12),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.purple,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Text(
-                    'Công việc',
-                    style: TextStyle(color: Colors.black, fontSize: 12),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.purple,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Text(
-                    'Tài chính',
-                    style: TextStyle(color: Colors.black, fontSize: 12),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.purple,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Text(
-                    'Sức khỏe',
-                    style: TextStyle(color: Colors.black, fontSize: 12),
-                  ),
-                ),
+                filterContainer('Tất cả'),
+                filterContainer('Học tập'),
+                filterContainer('Công việc'),
+                filterContainer('Tài chính'),
+                filterContainer('Sức khỏe'),
               ],
             ),
             const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 50,
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Kế hoạch 1',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                          Icon(
-                            Icons.delete_forever_outlined,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 50,
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Kế hoạch 1',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                          Icon(
-                            Icons.delete_forever_outlined,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                children: const [
+                  PlanContainer(text: 'Kế hoạch 1'),
+                  PlanContainer(text: 'Kế hoạch 2'),
+                  PlanContainer(text: 'Kế hoạch 3'),
+                  PlanContainer(text: 'Kế hoạch 4'),
+                  PlanContainer(text: 'Kế hoạch 5'),
+                  PlanContainer(text: 'Kế hoạch 6'),
+                  PlanContainer(text: 'Kế hoạch 7'),
+                  PlanContainer(text: 'Kế hoạch 8'),
+                  PlanContainer(text: 'Kế hoạch 9'),
                 ],
               ),
             ),
@@ -138,13 +48,53 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.assessment),
             label: 'Kế hoạch',
           ),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Thêm'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Của tôi'),
+        ],
+      ),
+    );
+  }
+
+  Widget filterContainer(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.purple,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.black, fontSize: 12),
+      ),
+    );
+  }
+}
+
+class PlanContainer extends StatelessWidget {
+  final String text;
+  const PlanContainer({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 50,
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(text, style: const TextStyle(color: Colors.white, fontSize: 16)),
+          const Icon(Icons.delete_forever_outlined, color: Colors.white),
         ],
       ),
     );
