@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.home_outlined),
+                  icon: const Icon(Icons.search),
                   onPressed: () => setState(() => _currentContent = 'home'),
                 ),
               ],
