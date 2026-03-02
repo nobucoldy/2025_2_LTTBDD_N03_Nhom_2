@@ -29,14 +29,13 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
 
-      // Thiết lập Theme Tối
       darkTheme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.purple, // Ép màu tím vào đây
+          seedColor: Colors.purple,
           brightness: Brightness.dark,
-          primary: Colors.purple, // Đảm bảo các thành phần chính có màu tím
+          primary: Colors.purple,
         ),
       ),
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,

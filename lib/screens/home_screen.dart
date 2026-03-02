@@ -16,19 +16,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _currentContent = 'home'; // Quản lý nội dung hiển thị: home hoặc about
-  bool _isSettingsExpanded = false; // Quản lý đóng/mở mục Cài đặt
+  String _currentContent = 'home';
+  bool _isSettingsExpanded = false;
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Widget hiển thị nội dung chính dựa trên trạng thái chọn
   Widget _buildMainContent() {
     if (_currentContent == 'about') {
-      // Khi chọn About, hiển thị nội dung trang About
       return const AboutScreen();
     }
 
-    // Mặc định hiển thị danh sách kế hoạch
     return Column(
       children: [
         const Padding(
@@ -41,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Widget cho từng dòng kế hoạch của cậu
   Widget _buildPlanItem(String title) {
     return Container(
       width: double.infinity,
@@ -108,7 +104,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            // Nút About: Bấm vào đổi nội dung main
             ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('About'),
@@ -117,7 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pop(context);
               },
             ),
-            // Nút Cài đặt: Bấm vào xổ xuống mục con
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Cài đặt'),
@@ -157,14 +151,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: const Icon(Icons.menu),
                   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                 ),
-                // Bấm vào logo/Search có thể reset về trang Home cho tiện
                 IconButton(
                   icon: const Icon(Icons.home_outlined),
                   onPressed: () => setState(() => _currentContent = 'home'),
                 ),
               ],
             ),
-            // Chỉ hiện Chip khi ở trang Home
             if (_currentContent == 'home')
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -188,7 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             const SizedBox(height: 10),
-            // Hiển thị nội dung động ở đây
             Expanded(child: SingleChildScrollView(child: _buildMainContent())),
           ],
         ),
