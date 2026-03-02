@@ -2,15 +2,70 @@ import 'package:flutter/material.dart';
 import 'about_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final bool isDarkMode;
+  final Function(bool) onThemeChanged;
+
+  const HomeScreen({
+    super.key,
+    required this.isDarkMode,
+    required this.onThemeChanged,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String _currentContent = 'home'; // Quản lý nội dung hiển thị: home hoặc about
+  bool _isSettingsExpanded = false; // Quản lý đóng/mở mục Cài đặt
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Widget hiển thị nội dung chính dựa trên trạng thái chọn
+  Widget _buildMainContent() {
+    if (_currentContent == 'about') {
+      // Khi chọn About, hiển thị nội dung trang About
+      return const AboutScreen();
+    }
+
+    // Mặc định hiển thị danh sách kế hoạch
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: Center(child: Text("Nội dung sẽ hiển thị ở đây")),
+        ),
+        _buildPlanItem('Kế hoạch 1'),
+        _buildPlanItem('Kế hoạch 2'),
+      ],
+    );
+  }
+
+  // Widget cho từng dòng kế hoạch của cậu
+  Widget _buildPlanItem(String title) {
+    return Container(
+      width: double.infinity,
+      height: 50,
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            const Icon(Icons.delete_forever_outlined, color: Colors.white),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildCategoryChip(String label) {
     return Container(
@@ -53,22 +108,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            // Nút About: Bấm vào đổi nội dung main
             ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('About'),
               onTap: () {
+                setState(() => _currentContent = 'about');
                 Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AboutScreen()),
-                );
               },
             ),
+            // Nút Cài đặt: Bấm vào xổ xuống mục con
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Cài đặt'),
-              onTap: () => Navigator.pop(context),
+              trailing: Icon(
+                _isSettingsExpanded ? Icons.expand_less : Icons.expand_more,
+              ),
+              onTap: () {
+                setState(() => _isSettingsExpanded = !_isSettingsExpanded);
+              },
             ),
+            if (_isSettingsExpanded)
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: ListTile(
+                  leading: const Icon(Icons.palette_outlined, size: 20),
+                  title: const Text(
+                    'Chế độ tối',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  trailing: Switch(
+                    value: widget.isDarkMode,
+                    activeColor: Colors.blue,
+                    onChanged: (val) => widget.onThemeChanged(val),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -80,101 +155,47 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    _scaffoldKey.currentState?.openDrawer();
-                  },
+                  onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                 ),
-                IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+                // Bấm vào logo/Search có thể reset về trang Home cho tiện
+                IconButton(
+                  icon: const Icon(Icons.home_outlined),
+                  onPressed: () => setState(() => _currentContent = 'home'),
+                ),
               ],
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  _buildCategoryChip('Tất cả'),
-                  const SizedBox(width: 8),
-                  _buildCategoryChip('Học tập'),
-                  const SizedBox(width: 8),
-                  _buildCategoryChip('Công việc'),
-                  const SizedBox(width: 8),
-                  _buildCategoryChip('Tài chính'),
-                  const SizedBox(width: 8),
-                  _buildCategoryChip('Sức khỏe'),
-                ],
+            // Chỉ hiện Chip khi ở trang Home
+            if (_currentContent == 'home')
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children:
+                      [
+                            'Tất cả',
+                            'Học tập',
+                            'Công việc',
+                            'Tài chính',
+                            'Sức khỏe',
+                          ]
+                          .map(
+                            (e) => Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: _buildCategoryChip(e),
+                            ),
+                          )
+                          .toList(),
+                ),
               ),
-            ),
-            const Expanded(
-              child: Center(child: Text("Nội dung sẽ hiển thị ở đây")),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 50,
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Kế hoạch 1',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                          Icon(
-                            Icons.delete_forever_outlined,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 50,
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Kế hoạch 1',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                          Icon(
-                            Icons.delete_forever_outlined,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const SizedBox(height: 10),
+            // Hiển thị nội dung động ở đây
+            Expanded(child: SingleChildScrollView(child: _buildMainContent())),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+        onTap: (index) => setState(() => _selectedIndex = index),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.assessment),

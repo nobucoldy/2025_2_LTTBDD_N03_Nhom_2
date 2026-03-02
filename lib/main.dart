@@ -5,17 +5,45 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _isDarkMode = false;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Quản lý kế hoạch',
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purple,
+          brightness: Brightness.light,
+        ),
+      ),
 
-      theme: ThemeData(primarySwatch: Colors.purple, useMaterial3: true),
-      home: const HomeScreen(),
+      // Thiết lập Theme Tối
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purple, // Ép màu tím vào đây
+          brightness: Brightness.dark,
+          primary: Colors.purple, // Đảm bảo các thành phần chính có màu tím
+        ),
+      ),
+      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: HomeScreen(
+        isDarkMode: _isDarkMode,
+        onThemeChanged: (val) => setState(() => _isDarkMode = val),
+      ),
     );
   }
 }
