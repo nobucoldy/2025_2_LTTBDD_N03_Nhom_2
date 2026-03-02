@@ -16,9 +16,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String _currentContent = 'home';
   bool _isSettingsExpanded = false;
   int _selectedIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Widget _buildMainContent() {
+    if (_currentContent == 'about') {
+      return const AboutScreen();
+    }
+
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: Center(child: Text("Nội dung sẽ hiển thị ở đây")),
+        ),
+        _buildPlanItem('Kế hoạch 1'),
+        _buildPlanItem('Kế hoạch 2'),
+      ],
+    );
+  }
 
   Widget _buildPlanItem(String title) {
     return Container(
@@ -90,11 +108,8 @@ class _HomeScreenState extends State<HomeScreen> {
               leading: const Icon(Icons.info_outline),
               title: const Text('About'),
               onTap: () {
+                setState(() => _currentContent = 'about');
                 Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AboutScreen()),
-                );
               },
             ),
             ListTile(
@@ -138,43 +153,43 @@ class _HomeScreenState extends State<HomeScreen> {
                 IconButton(icon: const Icon(Icons.search), onPressed: () {}),
               ],
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children:
-                    ['Tất cả', 'Học tập', 'Công việc', 'Tài chính', 'Sức khỏe']
-                        .map(
-                          (e) => Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: _buildCategoryChip(e),
-                          ),
-                        )
-                        .toList(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: Center(child: Text("Danh sách kế hoạch của bạn")),
-                    ),
-                    _buildPlanItem('Kế hoạch 1'),
-                    _buildPlanItem('Kế hoạch 2'),
-                    _buildPlanItem('Kế hoạch 3'),
-                  ],
+            if (_currentContent == 'home')
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children:
+                      [
+                            'Tất cả',
+                            'Học tập',
+                            'Công việc',
+                            'Tài chính',
+                            'Sức khỏe',
+                          ]
+                          .map(
+                            (e) => Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: _buildCategoryChip(e),
+                            ),
+                          )
+                          .toList(),
                 ),
               ),
-            ),
+            const SizedBox(height: 10),
+            Expanded(child: SingleChildScrollView(child: _buildMainContent())),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (index) => setState(() => _selectedIndex = index),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+            if (index == 0) {
+              _currentContent = 'home';
+            }
+          });
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.assessment),
