@@ -88,6 +88,14 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                     ],
                   ),
                 ),
+                TextButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.add),
+                  label: const Text(
+                    'Thêm giai đoạn',
+                    style: TextStyle(color: Colors.purple),
+                  ),
+                ),
               ],
             ),
           ),
