@@ -87,7 +87,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       builder: (_) {
         return Column(
           mainAxisSize: MainAxisSize.min,
-          children: ['Cá nhân', 'Công việc', 'Học tập', 'Sức kdddddddhỏe']
+          children: ['Cá nhân', 'Công việc', 'Học tập', 'Sức kdddddddhddddddỏe']
               .map(
                 (e) => ListTile(
                   title: Text(e),
@@ -139,20 +139,25 @@ Widget _categoryBox(String category, VoidCallback onTap) {
     borderRadius: BorderRadius.circular(16),
     child: Container(
       width: 70,
-      height: 20, 
+      height: 22,
       alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: Colors.blue.shade50,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.blue.shade200),
       ),
-      child: Text(
-        category,
-        overflow: TextOverflow.ellipsis, /
-        style: const TextStyle(
-          fontSize: 8,
-          fontWeight: FontWeight.w500,
-          color: Colors.blue,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.center,
+        child: Text(
+          category,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.blue,
+          ),
         ),
       ),
     ),
