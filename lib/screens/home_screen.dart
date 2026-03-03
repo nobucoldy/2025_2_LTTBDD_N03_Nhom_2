@@ -3,6 +3,7 @@ import 'about_screen.dart';
 import '../widgets/plan_card.dart';
 import '../widgets/filter_chip.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/add_plan_bottom_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -105,10 +106,24 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
+          if (index == 1) {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              builder: (context) => const AddPlanBottomSheet(),
+            );
+            return;
+          }
+
           setState(() {
             _selectedIndex = index;
             if (index == 0) {
               _currentContent = 'home';
+            } else if (index == 2) {
+              _currentContent = 'profile';
             }
           });
         },
