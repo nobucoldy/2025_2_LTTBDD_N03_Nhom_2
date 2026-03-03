@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/category_box.dart';
 
 class AddPlanBottomSheet extends StatefulWidget {
   const AddPlanBottomSheet({super.key});
@@ -35,7 +36,10 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _categoryBox(_category, () => _showCategoryPicker(context)),
+                    CategoryBox(
+                      category: _category,
+                      onTap: () => _showCategoryPicker(context),
+                    ),
                     const SizedBox(width: 6),
                     _quickAction(
                       icon: Icons.calendar_today_outlined,
@@ -128,37 +132,6 @@ Widget _quickAction({
             style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
           ),
         ],
-      ),
-    ),
-  );
-}
-
-Widget _categoryBox(String category, VoidCallback onTap) {
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(16),
-    child: Container(
-      width: 70,
-      height: 22,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      decoration: BoxDecoration(
-        color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.blue.shade200),
-      ),
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        alignment: Alignment.center,
-        child: Text(
-          category,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontWeight: FontWeight.w500,
-            color: Colors.blue,
-          ),
-        ),
       ),
     ),
   );
