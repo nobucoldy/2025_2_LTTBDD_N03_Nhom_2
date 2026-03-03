@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/category_box.dart';
 import '../widgets/quick_action.dart';
+import '../models/plan_model.dart';
+import '../models/phase_model.dart';
 
 class AddPlanBottomSheet extends StatefulWidget {
   const AddPlanBottomSheet({super.key});
@@ -13,6 +15,8 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   String _category = 'Không có thể loại';
   DateTime? _startDate;
   DateTime? _endDate;
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _phaseController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +36,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextField(
+                      controller: _titleController,
                       decoration: const InputDecoration(
                         hintText: 'Nhập kế hoạch mới tại đây',
                         hintStyle: TextStyle(color: Colors.grey),
@@ -82,6 +87,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                             ),
                           ),
                           TextField(
+                            controller: _phaseController,
                             decoration: const InputDecoration(
                               hintText: 'Nhập giai đoạn 1:',
                               hintStyle: TextStyle(color: Colors.grey),
@@ -116,7 +122,26 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
             padding: const EdgeInsets.all(15),
             child: SizedBox(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (_titleController.text.trim().isEmpty) return;
+
+                  final newPlan = PlanModel(
+                    title: _titleController.text.trim(),
+                    category: _category,
+                    startDate: _startDate,
+                    endDate: _endDate,
+                    phases: [
+                      PhaseModel(
+                        title: _phaseController.text.isEmpty
+                            ? 'Giai đoạn 1'
+                            : _phaseController.text,
+                        tasks: [],
+                      ),
+                    ],
+                  );
+
+                  Navigator.pop(context, newPlan);
+                },
                 child: const Text(
                   'Lưu',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

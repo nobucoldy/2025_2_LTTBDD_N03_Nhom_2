@@ -96,9 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (index) {
+        onTap: (index) async {
           if (index == 1) {
-            showModalBottomSheet(
+            final newPlan = await showModalBottomSheet(
               context: context,
               isScrollControlled: true,
               shape: const RoundedRectangleBorder(
@@ -106,6 +106,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               builder: (context) => const AddPlanBottomSheet(),
             );
+
+            if (newPlan != null) {
+              setState(() {
+                samplePlans.add(newPlan);
+              });
+            }
             return;
           }
 
