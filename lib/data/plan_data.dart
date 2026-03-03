@@ -4,74 +4,107 @@ import '../models/task_model.dart';
 
 List<PlanModel> samplePlans = [
   PlanModel(
-    title: 'Ôn thi cuối kỳ',
+    title: 'Đỗ tốt nghiệp Đại học',
     category: 'Học tập',
-    startDate: DateTime(2026, 3, 1),
-    endDate: DateTime(2026, 3, 30),
+    startDate: DateTime(2026, 1, 1),
+    endDate: DateTime(2026, 7, 30),
     phases: [
       PhaseModel(
-        title: 'Giai đoạn 1',
+        title: 'Củng cố nền tảng',
         tasks: [
-          TaskModel(title: 'Học chương 1'),
-          TaskModel(title: 'Học chương 2'),
+          TaskModel(title: 'Ôn lại môn Cấu trúc dữ liệu'),
+          TaskModel(title: 'Ôn lại môn Hệ điều hành'),
         ],
       ),
       PhaseModel(
-        title: 'Giai đoạn 2',
-        tasks: [TaskModel(title: 'Làm đề thi thử')],
+        title: 'Luyện đề',
+        tasks: [
+          TaskModel(title: 'Làm đề thi năm trước'),
+          TaskModel(title: 'Phân tích lỗi sai'),
+        ],
+      ),
+      PhaseModel(
+        title: 'Chuẩn bị thi',
+        tasks: [
+          TaskModel(title: 'Ôn trọng tâm'),
+          TaskModel(title: 'Giữ sức khỏe'),
+        ],
       ),
     ],
   ),
 
   PlanModel(
-    title: 'Tập thể dục',
+    title: 'Trở thành Flutter Developer',
+    category: 'Công việc',
+    startDate: DateTime(2026, 2, 1),
+    endDate: DateTime(2026, 12, 31),
+    phases: [
+      PhaseModel(
+        title: 'Nền tảng Flutter',
+        tasks: [
+          TaskModel(title: 'Học widget cơ bản'),
+          TaskModel(title: 'State management'),
+        ],
+      ),
+      PhaseModel(
+        title: 'Dự án thực tế',
+        tasks: [
+          TaskModel(title: 'Làm app quản lý kế hoạch'),
+          TaskModel(title: 'Deploy & demo'),
+        ],
+      ),
+      PhaseModel(
+        title: 'Nâng cao',
+        tasks: [
+          TaskModel(title: 'Firebase'),
+          TaskModel(title: 'Clean Architecture'),
+        ],
+      ),
+    ],
+  ),
+
+  PlanModel(
+    title: 'Cải thiện sức khỏe toàn diện',
     category: 'Sức khỏe',
+    startDate: DateTime(2026, 1, 1),
+    endDate: DateTime(2026, 12, 31),
     phases: [
       PhaseModel(
-        title: 'Tuần 1',
+        title: 'Hình thành thói quen',
         tasks: [
-          TaskModel(title: 'Chạy bộ 20 phút'),
-          TaskModel(title: 'Hít đất'),
-        ],
-      ),
-    ],
-  ),
-  PlanModel(
-    title: 'Ôn thi cuối kỳ',
-    category: 'Học tập',
-    startDate: DateTime(2026, 3, 1),
-    endDate: DateTime(2026, 3, 30),
-    phases: [
-      PhaseModel(
-        title: 'Giai đoạn 1',
-        tasks: [
-          TaskModel(title: 'Học chương 1'),
-          TaskModel(title: 'Học chương 2'),
+          TaskModel(title: 'Ngủ trước 23h'),
+          TaskModel(title: 'Uống đủ nước'),
         ],
       ),
       PhaseModel(
-        title: 'Giai đoạn 2',
-        tasks: [TaskModel(title: 'Làm đề thi thử')],
+        title: 'Tăng thể lực',
+        tasks: [
+          TaskModel(title: 'Chạy bộ 3 buổi/tuần'),
+          TaskModel(title: 'Tập gym nhẹ'),
+        ],
       ),
     ],
   ),
 
   PlanModel(
-    title: 'Ôn thi cuối kỳ',
-    category: 'Học tập',
-    startDate: DateTime(2026, 3, 1),
-    endDate: DateTime(2026, 3, 30),
+    title: 'Quản lý tài chính cá nhân',
+    category: 'Tài chính',
+    startDate: DateTime(2026, 1, 1),
+    endDate: DateTime(2026, 12, 31),
     phases: [
       PhaseModel(
-        title: 'Giai đoạn 1',
+        title: 'Kiểm soát chi tiêu',
         tasks: [
-          TaskModel(title: 'Học chương 1'),
-          TaskModel(title: 'Học chương 2'),
+          TaskModel(title: 'Ghi chép chi tiêu hằng ngày'),
+          TaskModel(title: 'Cắt giảm chi không cần thiết'),
         ],
       ),
       PhaseModel(
-        title: 'Giai đoạn 2',
-        tasks: [TaskModel(title: 'Làm đề thi thử')],
+        title: 'Tích lũy & đầu tư',
+        tasks: [
+          TaskModel(title: 'Tiết kiệm hàng tháng'),
+          TaskModel(title: 'Tìm hiểu đầu tư cơ bản'),
+        ],
       ),
     ],
   ),
