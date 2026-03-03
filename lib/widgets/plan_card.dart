@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../models/plan_model.dart';
 
-Widget planCard(String title) {
+Widget planCard(PlanModel plan) {
   return Container(
     width: double.infinity,
     height: 50,
@@ -15,7 +16,7 @@ Widget planCard(String title) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            title,
+            plan.title,
             style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
           const Icon(Icons.delete_forever_outlined, color: Colors.white),

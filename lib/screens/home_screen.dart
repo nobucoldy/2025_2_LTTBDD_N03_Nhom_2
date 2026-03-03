@@ -4,6 +4,7 @@ import '../widgets/plan_card.dart';
 import '../widgets/filter_chip.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/add_plan_bottom_sheet.dart';
+import '../models/plan_model.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -27,16 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildMainContent() {
     return Column(
       children: [
-        planCard('Kế hoạch 1'),
-        planCard('Kế hoạch 2'),
-        planCard('Kế hoạch 3'),
-        planCard('Kế hoạch 4'),
-        planCard('Kế hoạch 5'),
-        planCard('Kế hoạch 6'),
-        planCard('Kế hoạch 7'),
-        planCard('Kế hoạch 8'),
-        planCard('Kế hoạch 9'),
-        planCard('Kế hoạch 10'),
+        planCard(PlanModel(title: 'Học Flutter', category: 'Học tập')),
+        planCard(PlanModel(title: 'Dự án cá nhân', category: 'Công việc')),
+        planCard(PlanModel(title: 'Đầu tư chứng khoán', category: 'Tài chính')),
+        planCard(PlanModel(title: 'Chạy bộ mỗi sáng', category: 'Sức khỏe')),
       ],
     );
   }
@@ -51,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onThemeChanged: widget.onThemeChanged,
         isSettingsExpanded: _isSettingsExpanded,
         onNavigate: (value) {
-          Navigator.pop(context); // đóng drawer trước
+          Navigator.pop(context);
 
           if (value == 'about') {
             Navigator.push(
@@ -72,7 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // App bar tự custom
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -84,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
 
-            // Filter chip (luôn hiển thị vì đây là Home)
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -103,7 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 10),
 
-            // Nội dung chính
             Expanded(child: SingleChildScrollView(child: _buildMainContent())),
           ],
         ),
