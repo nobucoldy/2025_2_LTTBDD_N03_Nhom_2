@@ -8,7 +8,7 @@ class AddPlanBottomSheet extends StatefulWidget {
 }
 
 class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
-  String _category = 'Cá nhân';
+  String _category = 'Không có thể loại';
   DateTime? _startDate;
   DateTime? _endDate;
 
@@ -30,20 +30,12 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                     hintStyle: TextStyle(color: Colors.grey),
                     border: InputBorder.none,
                   ),
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: const TextStyle(fontSize: 15),
                 ),
-                const SizedBox(height: 12),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _quickAction(
-                      icon: Icons.label_outline,
-                      text: _category,
-                      onTap: () => _showCategoryPicker(context),
-                    ),
+                    _categoryBox(_category, () => _showCategoryPicker(context)),
                     const SizedBox(width: 6),
                     _quickAction(
                       icon: Icons.calendar_today_outlined,
@@ -95,7 +87,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       builder: (_) {
         return Column(
           mainAxisSize: MainAxisSize.min,
-          children: ['Cá nhân', 'Công việc', 'Học tập', 'Sức khỏe']
+          children: ['Cá nhân', 'Công việc', 'Học tập', 'Sức kdddddddhỏe']
               .map(
                 (e) => ListTile(
                   title: Text(e),
@@ -136,6 +128,32 @@ Widget _quickAction({
             style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
           ),
         ],
+      ),
+    ),
+  );
+}
+
+Widget _categoryBox(String category, VoidCallback onTap) {
+  return InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(16),
+    child: Container(
+      width: 70,
+      height: 20, 
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.blue.shade200),
+      ),
+      child: Text(
+        category,
+        overflow: TextOverflow.ellipsis, /
+        style: const TextStyle(
+          fontSize: 8,
+          fontWeight: FontWeight.w500,
+          color: Colors.blue,
+        ),
       ),
     ),
   );
