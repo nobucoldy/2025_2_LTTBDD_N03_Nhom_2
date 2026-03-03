@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'about_screen.dart';
+import '../widgets/plan_card.dart';
+import '../widgets/filter_chip.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -32,52 +34,9 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.symmetric(vertical: 20),
           child: Center(child: Text("Nội dung sẽ hiển thị ở đây")),
         ),
-        _buildPlanItem('Kế hoạch 1'),
-        _buildPlanItem('Kế hoạch 2'),
+        planCard('Kế hoạch 1'),
+        planCard('Kế hoạch 2'),
       ],
-    );
-  }
-
-  Widget _buildPlanItem(String title) {
-    return Container(
-      width: double.infinity,
-      height: 50,
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            const Icon(Icons.delete_forever_outlined, color: Colors.white),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryChip(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.purple.shade100,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
     );
   }
 
@@ -132,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   trailing: Switch(
                     value: widget.isDarkMode,
-                    activeColor: Colors.blue,
+                    activeThumbColor: Colors.blue,
                     onChanged: (val) => widget.onThemeChanged(val),
                   ),
                 ),
@@ -169,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           .map(
                             (e) => Padding(
                               padding: const EdgeInsets.only(right: 8),
-                              child: _buildCategoryChip(e),
+                              child: filterChip(e),
                             ),
                           )
                           .toList(),
