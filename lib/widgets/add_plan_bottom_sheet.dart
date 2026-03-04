@@ -3,6 +3,8 @@ import '../widgets/category_box.dart';
 import '../widgets/quick_action.dart';
 import '../models/plan_model.dart';
 import '../models/phase_model.dart';
+import '../data/category_data.dart';
+import '../models/category_model.dart';
 
 class AddPlanBottomSheet extends StatefulWidget {
   const AddPlanBottomSheet({super.key});
@@ -12,7 +14,7 @@ class AddPlanBottomSheet extends StatefulWidget {
 }
 
 class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
-  String _category = 'Không có thể loại';
+  CategoryModel _category = sampleCategories.first;
   DateTime? _startDate;
   DateTime? _endDate;
   final TextEditingController _titleController = TextEditingController();
@@ -179,17 +181,18 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       builder: (_) {
         return Column(
           mainAxisSize: MainAxisSize.min,
-          children: ['Cá nhân', 'Công việc', 'Học tập', 'Sức kdddddddhddddddỏe']
-              .map(
-                (e) => ListTile(
-                  title: Text(e),
-                  onTap: () {
-                    setState(() => _category = e);
-                    Navigator.pop(context);
-                  },
-                ),
-              )
-              .toList(),
+          children: sampleCategories.map((category) {
+            return ListTile(
+              leading: Icon(category.icon, color: category.color),
+              title: Text(category.name),
+              onTap: () {
+                setState(() {
+                  _category = category;
+                });
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
         );
       },
     );

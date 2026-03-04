@@ -28,7 +28,7 @@ final List<CategoryModel> sampleCategories = [
   ),
   CategoryModel(
     id: 'finance',
-    name: 'Tài chính',
+    name: 'Tài chdính',
     icon: Icons.attach_money,
     color: Colors.green,
   ),

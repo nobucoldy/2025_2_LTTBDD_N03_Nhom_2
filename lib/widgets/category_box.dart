@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../models/category_model.dart';
+
 class CategoryBox extends StatelessWidget {
-  final String category;
+  final CategoryModel category;
   final VoidCallback onTap;
 
   const CategoryBox({super.key, required this.category, required this.onTap});
@@ -25,7 +27,7 @@ class CategoryBox extends StatelessWidget {
           fit: BoxFit.scaleDown,
           alignment: Alignment.center,
           child: Text(
-            category,
+            category.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(

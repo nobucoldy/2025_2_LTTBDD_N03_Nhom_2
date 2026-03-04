@@ -5,6 +5,8 @@ import '../widgets/filter_chip.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/add_plan_bottom_sheet.dart';
 import '../data/plan_data.dart';
+import '../data/category_data.dart';
+import '../models/category_model.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -23,10 +25,34 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _isSettingsExpanded = false;
   int _selectedIndex = 0;
+  late CategoryModel _selectedCategory;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = sampleCategories.first;
+  }
+
   Widget _buildMainContent() {
-    return Column(children: samplePlans.map((plan) => planCard(plan)).toList());
+    final filteredPlans = samplePlans.where((plan) {
+      return plan.category.id == _selectedCategory.id;
+    }).toList();
+
+    if (filteredPlans.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Text(
+          'Chưa có kế hoạch cho thể loại này',
+          style: TextStyle(color: Colors.grey),
+        ),
+      );
+    }
+
+    return Column(
+      children: filteredPlans.map((plan) => planCard(plan)).toList(),
+    );
   }
 
   @override
@@ -60,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            /// Top bar
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -75,20 +102,27 @@ class _HomeScreenState extends State<HomeScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
-                children:
-                    ['Tất cả', 'Học tập', 'Công việc', 'Tài chính', 'Sức khỏe']
-                        .map(
-                          (e) => Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: filterChip(e),
-                          ),
-                        )
-                        .toList(),
+                children: sampleCategories.map((category) {
+                  final isSelected = category.id == _selectedCategory.id;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedCategory = category;
+                        });
+                      },
+                      child: filterChip(category.name, isSelected: isSelected),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
 
             const SizedBox(height: 10),
 
+            /// Plan list
             Expanded(child: SingleChildScrollView(child: _buildMainContent())),
           ],
         ),

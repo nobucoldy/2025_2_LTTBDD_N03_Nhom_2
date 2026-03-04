@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-Widget filterChip(String label) {
+Widget filterChip(String label, {bool isSelected = false}) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     decoration: BoxDecoration(
-      color: Colors.purple.shade100,
+      color: isSelected ? Colors.purple : Colors.purple.shade100,
       borderRadius: BorderRadius.circular(15),
     ),
     child: Text(
       label,
-      style: const TextStyle(
-        color: Colors.black,
+      style: TextStyle(
+        color: isSelected ? Colors.white : Colors.black,
         fontSize: 12,
         fontWeight: FontWeight.bold,
       ),

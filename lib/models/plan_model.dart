@@ -1,17 +1,18 @@
+import 'category_model.dart';
 import 'phase_model.dart';
 
 class PlanModel {
-  String title;
-  String category;
-  DateTime? startDate;
-  DateTime? endDate;
-  List<PhaseModel> phases;
+  final String title;
+  final CategoryModel category;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final List<PhaseModel> phases;
 
   PlanModel({
     required this.title,
     required this.category,
     this.startDate,
     this.endDate,
-    List<PhaseModel>? phases,
-  }) : phases = phases ?? [];
+    required this.phases,
+  });
 }
