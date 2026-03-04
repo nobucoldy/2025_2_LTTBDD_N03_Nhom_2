@@ -157,43 +157,114 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   }
 
   Future<void> _pickDate(BuildContext context, bool isStart) async {
-    final pickedDate = await showDatePicker(
+    DateTime tempDate = isStart
+        ? (_startDate ?? DateTime.now())
+        : (_endDate ?? DateTime.now());
+
+    await showModalBottomSheet(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2023),
-      lastDate: DateTime(2030),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Colors.purple, // màu header
-              onPrimary: Colors.white, // màu chữ header
-              onSurface: Colors.black, // màu chữ ngày
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.purple, // màu nút cancel/ok
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-            ),
-          ),
-          child: SizedBox(
-            width: 300, // width nhỏ hơn
-            height: 400, // height nhỏ hơn
-            child: child,
-          ),
+              child: SizedBox(
+                height: 400,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: CalendarDatePicker(
+                        initialDate: tempDate,
+                        firstDate: DateTime(2023),
+                        lastDate: DateTime(2030),
+                        onDateChanged: (date) {
+                          setModalState(() {
+                            tempDate = date;
+                          });
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    Wrap(
+                      spacing: 8,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setModalState(() {
+                              tempDate = DateTime.now().add(
+                                const Duration(days: 30),
+                              );
+                            });
+                          },
+                          child: const Text('1 tháng'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setModalState(() {
+                              tempDate = DateTime.now().add(
+                                const Duration(days: 90),
+                              );
+                            });
+                          },
+                          child: const Text('3 tháng'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setModalState(() {
+                              tempDate = DateTime.now().add(
+                                const Duration(days: 180),
+                              );
+                            });
+                          },
+                          child: const Text('6 tháng'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            setModalState(() {
+                              tempDate = DateTime.now().add(
+                                const Duration(days: 365),
+                              );
+                            });
+                          },
+                          child: const Text('1 năm'),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            if (isStart) {
+                              _startDate = tempDate;
+                            } else {
+                              _endDate = tempDate;
+                            }
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Chọn'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
-
-    if (pickedDate != null) {
-      setState(() {
-        if (isStart) {
-          _startDate = pickedDate;
-        } else {
-          _endDate = pickedDate;
-        }
-      });
-    }
   }
 
   void _showCategoryPicker(BuildContext context) {
