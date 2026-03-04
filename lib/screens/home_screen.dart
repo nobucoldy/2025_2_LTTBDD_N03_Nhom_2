@@ -42,6 +42,13 @@ class _HomeScreenState extends State<HomeScreen> {
       return plan.category?.id == _selectedCategory!.id;
     }).toList();
 
+    filteredPlans.sort((a, b) {
+      if (a.endDate == null && b.endDate == null) return 0;
+      if (a.endDate == null) return 1;
+      if (b.endDate == null) return -1;
+      return a.endDate!.compareTo(b.endDate!);
+    });
+
     if (filteredPlans.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(20),
