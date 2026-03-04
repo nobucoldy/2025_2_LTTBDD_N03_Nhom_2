@@ -8,6 +8,7 @@ import '../data/plan_data.dart';
 import '../data/category_data.dart';
 import '../models/category_model.dart';
 import 'plan_detail_screen.dart';
+import '../utils/plan_group.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -42,13 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
       return plan.category?.id == _selectedCategory!.id;
     }).toList();
 
-    filteredPlans.sort((a, b) {
-      if (a.endDate == null && b.endDate == null) return 0;
-      if (a.endDate == null) return 1;
-      if (b.endDate == null) return -1;
-      return a.endDate!.compareTo(b.endDate!);
-    });
-
     if (filteredPlans.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(20),
@@ -59,16 +53,46 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
+    final groupedPlans = groupPlansByTime(filteredPlans);
+
     return Column(
-      children: filteredPlans.map((plan) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => PlanDetailScreen(plan: plan)),
-            );
-          },
-          child: planCard(plan),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: groupedPlans.entries.map((entry) {
+        if (entry.value.isEmpty) return Container();
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 10, bottom: 4),
+                child: Text(
+                  entry.key,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Column(
+                children: entry.value.map((plan) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PlanDetailScreen(plan: plan),
+                        ),
+                      );
+                    },
+                    child: planCard(plan),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
         );
       }).toList(),
     );
@@ -78,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-
       drawer: AppDrawer(
         isDarkMode: widget.isDarkMode,
         onThemeChanged: widget.onThemeChanged,
@@ -101,7 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
       ),
-
       body: SafeArea(
         child: Column(
           children: [
@@ -115,7 +137,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 IconButton(icon: const Icon(Icons.search), onPressed: () {}),
               ],
             ),
-
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -133,7 +154,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-
                   ...sampleCategories.map((category) {
                     final isSelected = _selectedCategory?.id == category.id;
                     return Padding(
@@ -154,14 +174,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-
             const SizedBox(height: 10),
-
             Expanded(child: SingleChildScrollView(child: _buildMainContent())),
           ],
         ),
       ),
-
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) async {

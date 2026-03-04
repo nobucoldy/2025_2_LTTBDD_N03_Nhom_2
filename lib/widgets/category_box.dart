@@ -9,7 +9,6 @@ class CategoryBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Chọn màu cố định
     final Color bgColor = Colors.purple.shade50;
     final Color borderColor = Colors.purple.shade200;
     final Color textColor = Colors.purple;
