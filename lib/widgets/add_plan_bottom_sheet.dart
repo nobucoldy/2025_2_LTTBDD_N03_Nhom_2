@@ -28,11 +28,13 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   int? _editingPhaseIndex;
   final TextEditingController _taskController = TextEditingController();
+  int? _editingPhaseTitleIndex;
+  final TextEditingController _phaseTitleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.65,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -124,13 +126,44 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  phase.title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                if (_editingPhaseTitleIndex == index)
+                  TextField(
+                    controller: _phaseTitleController,
+                    autofocus: true,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    decoration: const InputDecoration(
+                      hintText: 'Tên giai đoạn...',
+                      border: InputBorder.none,
+                      isDense: true,
+                    ),
+                    onSubmitted: (value) {
+                      setState(() {
+                        if (value.trim().isNotEmpty) {
+                          phase.title = value.trim();
+                        }
+                        _editingPhaseTitleIndex = null;
+                      });
+                    },
+                  )
+                else
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _editingPhaseTitleIndex = index;
+                        _phaseTitleController.text = phase.title;
+                      });
+                    },
+                    child: Text(
+                      phase.title,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                ),
 
                 const SizedBox(height: 6),
 
@@ -146,6 +179,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                     ),
                   ),
                 ),
+
                 if (_editingPhaseIndex == index)
                   Padding(
                     padding: const EdgeInsets.only(left: 12),
@@ -155,8 +189,8 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                       style: const TextStyle(fontSize: 13),
                       decoration: const InputDecoration(
                         hintText: 'Nhập nhiệm vụ...',
-                        isDense: true,
                         border: InputBorder.none,
+                        isDense: true,
                       ),
                       onSubmitted: (value) {
                         if (value.trim().isEmpty) {
@@ -209,6 +243,8 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       _phases.add(
         PhaseModel(title: 'Giai đoạn ${_phases.length + 1}', tasks: []),
       );
+      _editingPhaseTitleIndex = _phases.length - 1;
+      _phaseTitleController.text = _phases.last.title;
     });
   }
 
