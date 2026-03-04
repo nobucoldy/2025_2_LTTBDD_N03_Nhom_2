@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildMainContent() {
     final filteredPlans = samplePlans.where((plan) {
       if (_selectedCategory == null) return true;
-      return plan.category.id == _selectedCategory!.id;
+      return plan.category?.id == _selectedCategory!.id;
     }).toList();
 
     if (filteredPlans.isEmpty) {

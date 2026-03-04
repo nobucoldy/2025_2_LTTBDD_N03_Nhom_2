@@ -5,6 +5,7 @@ import '../models/plan_model.dart';
 import '../models/phase_model.dart';
 import '../data/category_data.dart';
 import '../models/category_model.dart';
+import 'custom_date_picker.dart';
 
 class AddPlanBottomSheet extends StatefulWidget {
   const AddPlanBottomSheet({super.key});
@@ -14,7 +15,7 @@ class AddPlanBottomSheet extends StatefulWidget {
 }
 
 class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
-  CategoryModel _category = sampleCategories.first;
+  CategoryModel? _category;
   DateTime? _startDate;
   DateTime? _endDate;
   final TextEditingController _titleController = TextEditingController();
@@ -157,110 +158,27 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   }
 
   Future<void> _pickDate(BuildContext context, bool isStart) async {
-    DateTime tempDate = isStart
+    DateTime initial = isStart
         ? (_startDate ?? DateTime.now())
         : (_endDate ?? DateTime.now());
 
-    await showModalBottomSheet(
+    showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: SizedBox(
-                height: 400,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: CalendarDatePicker(
-                        initialDate: tempDate,
-                        firstDate: DateTime(2023),
-                        lastDate: DateTime(2030),
-                        onDateChanged: (date) {
-                          setModalState(() {
-                            tempDate = date;
-                          });
-                        },
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    Wrap(
-                      spacing: 8,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            setModalState(() {
-                              tempDate = DateTime.now().add(
-                                const Duration(days: 30),
-                              );
-                            });
-                          },
-                          child: const Text('1 tháng'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setModalState(() {
-                              tempDate = DateTime.now().add(
-                                const Duration(days: 90),
-                              );
-                            });
-                          },
-                          child: const Text('3 tháng'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setModalState(() {
-                              tempDate = DateTime.now().add(
-                                const Duration(days: 180),
-                              );
-                            });
-                          },
-                          child: const Text('6 tháng'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setModalState(() {
-                              tempDate = DateTime.now().add(
-                                const Duration(days: 365),
-                              );
-                            });
-                          },
-                          child: const Text('1 năm'),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            if (isStart) {
-                              _startDate = tempDate;
-                            } else {
-                              _endDate = tempDate;
-                            }
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Chọn'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+      builder: (_) {
+        return CustomDatePicker(
+          initialDate: initial,
+          onDateSelected: (date) {
+            setState(() {
+              if (isStart) {
+                _startDate = date;
+              } else {
+                _endDate = date;
+              }
+            });
           },
         );
       },
