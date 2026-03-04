@@ -189,20 +189,89 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     showModalBottomSheet(
       context: context,
       builder: (_) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: sampleCategories.map((category) {
-            return ListTile(
-              leading: Icon(category.icon, color: category.color),
-              title: Text(category.name),
-              onTap: () {
-                setState(() {
-                  _category = category;
-                });
+        final categoriesWithNone = <CategoryModel?>[null, ...sampleCategories];
+
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...categoriesWithNone.map((category) {
+                return ListTile(
+                  leading: category == null
+                      ? const Icon(Icons.clear, color: Colors.grey)
+                      : Icon(category.icon, color: Colors.purple),
+                  title: Text(
+                    category?.name ?? 'Không có thể loại',
+                    style: TextStyle(
+                      color: category == null ? Colors.grey : Colors.purple,
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _category = category;
+                    });
+                    Navigator.pop(context);
+                  },
+                );
+              }),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.add, color: Colors.green),
+                title: const Text(
+                  'Thêm thể loại mới',
+                  style: TextStyle(color: Colors.green),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showAddCategoryDialog(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showAddCategoryDialog(BuildContext context) {
+    final TextEditingController newCategoryController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('Thêm thể loại mới'),
+          content: TextField(
+            controller: newCategoryController,
+            decoration: const InputDecoration(hintText: 'Tên thể loại'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
                 Navigator.pop(context);
               },
-            );
-          }).toList(),
+              child: const Text('Hủy'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final name = newCategoryController.text.trim();
+                if (name.isNotEmpty) {
+                  final newCategory = CategoryModel(
+                    id: DateTime.now().millisecondsSinceEpoch.toString(),
+                    name: name,
+                    icon: Icons.label, // icon mặc định
+                    color: Colors.purple, // màu cố định
+                  );
+                  setState(() {
+                    sampleCategories.add(newCategory);
+                    _category = newCategory; // tự động chọn thể loại vừa thêm
+                  });
+                }
+                Navigator.pop(context);
+              },
+              child: const Text('Thêm'),
+            ),
+          ],
         );
       },
     );
