@@ -7,7 +7,7 @@ Map<String, List<PlanModel>> groupPlansByTime(List<PlanModel> plans) {
     '3 tháng tới': [],
     '6 tháng tới': [],
     '1 năm tới': [],
-    'Hơn 1 năm': [],
+    'Xa hơn': [],
   };
 
   for (var plan in plans) {
@@ -22,7 +22,7 @@ Map<String, List<PlanModel>> groupPlansByTime(List<PlanModel> plans) {
     } else if (end.isBefore(DateTime(now.year + 1, now.month, now.day))) {
       grouped['1 năm tới']!.add(plan);
     } else {
-      grouped['Hơn 1 năm']!.add(plan);
+      grouped['Xa hơn']!.add(plan);
     }
   }
 

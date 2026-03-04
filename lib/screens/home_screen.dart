@@ -31,6 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool _isSearching = false;
+  String _searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -39,15 +43,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMainContent() {
     final filteredPlans = samplePlans.where((plan) {
-      if (_selectedCategory == null) return true;
-      return plan.category?.id == _selectedCategory!.id;
+      final matchesCategory =
+          _selectedCategory == null ||
+          plan.category?.id == _selectedCategory!.id;
+
+      final matchesSearch =
+          _searchQuery.isEmpty ||
+          plan.title.toLowerCase().contains(_searchQuery);
+
+      return matchesCategory && matchesSearch;
     }).toList();
 
     if (filteredPlans.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(20),
         child: Text(
-          'Chưa có kế hoạch cho thể loại này',
+          'Không tìm thấy kế hoạch phù hợp',
           style: TextStyle(color: Colors.grey),
         ),
       );
@@ -134,7 +145,41 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: const Icon(Icons.menu),
                   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                 ),
-                IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+
+                _isSearching
+                    ? Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            hintText: 'Tìm kế hoạch...',
+                            border: InputBorder.none,
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () {
+                                setState(() {
+                                  _isSearching = false;
+                                  _searchQuery = '';
+                                  _searchController.clear();
+                                });
+                              },
+                            ),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              _searchQuery = value.toLowerCase();
+                            });
+                          },
+                        ),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {
+                          setState(() {
+                            _isSearching = true;
+                          });
+                        },
+                      ),
               ],
             ),
             SingleChildScrollView(
