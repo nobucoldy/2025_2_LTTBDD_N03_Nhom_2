@@ -167,8 +167,8 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
                 const SizedBox(height: 6),
 
-                ...phase.tasks.map(
-                  (task) => Padding(
+                ...phase.tasks.map((task) {
+                  return Padding(
                     padding: const EdgeInsets.only(left: 12, bottom: 4),
                     child: Row(
                       children: [
@@ -177,8 +177,8 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                         Text(task.title, style: const TextStyle(fontSize: 13)),
                       ],
                     ),
-                  ),
-                ),
+                  );
+                }),
 
                 if (_editingPhaseIndex == index)
                   Padding(
@@ -262,7 +262,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       category: _category,
       startDate: _startDate,
       endDate: _endDate,
-      phases: _phases,
+      phases: List.from(_phases),
     );
 
     Navigator.pop(context, newPlan);
