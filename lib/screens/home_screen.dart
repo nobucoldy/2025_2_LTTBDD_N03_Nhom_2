@@ -9,6 +9,7 @@ import '../data/category_data.dart';
 import '../models/category_model.dart';
 import 'plan_detail_screen.dart';
 import '../utils/plan_group.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -46,11 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
       final matchesCategory =
           _selectedCategory == null ||
           plan.category?.id == _selectedCategory!.id;
-
       final matchesSearch =
           _searchQuery.isEmpty ||
           plan.title.toLowerCase().contains(_searchQuery);
-
       return matchesCategory && matchesSearch;
     }).toList();
 
@@ -69,12 +68,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: groupedPlans.entries.map((entry) {
+        // <--- Biến entry bắt đầu từ đây
         if (entry.value.isEmpty) return Container();
+
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Tiêu đề nhóm (Hôm nay, Ngày mai...)
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 10, bottom: 4),
                 child: Text(
@@ -86,19 +88,54 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 6),
+
               Column(
                 children: entry.value.map((plan) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => PlanDetailScreen(plan: plan),
-                        ),
-                      );
-                    },
-                    child: planCard(plan),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Slidable(
+                      key: ObjectKey(plan),
+                      endActionPane: ActionPane(
+                        motion: const DrawerMotion(),
+                        extentRatio: 0.5,
+                        children: [
+                          CustomSlidableAction(
+                            onPressed: (context) {},
+                            backgroundColor: Colors.transparent,
+                            child: _buildActionButton(
+                              icon: Icons.edit_rounded,
+                              color: Colors.blueAccent,
+                              label: 'Sửa',
+                            ),
+                          ),
+                          // Nút Xóa
+                          CustomSlidableAction(
+                            onPressed: (context) {
+                              setState(() {
+                                samplePlans.remove(plan);
+                              });
+                            },
+                            backgroundColor: Colors.transparent,
+                            child: _buildActionButton(
+                              icon: Icons.delete_outline_rounded,
+                              color: Colors.redAccent,
+                              label: 'Xóa',
+                            ),
+                          ),
+                        ],
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => PlanDetailScreen(plan: plan),
+                            ),
+                          );
+                        },
+                        child: planCard(plan),
+                      ),
+                    ),
                   );
                 }).toList(),
               ),
@@ -260,6 +297,37 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Của tôi'),
         ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required Color color,
+    required String label,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
