@@ -7,6 +7,7 @@ import '../data/category_data.dart';
 import '../models/category_model.dart';
 import 'custom_date_picker.dart';
 import '../models/task_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddPlanBottomSheet extends StatefulWidget {
   const AddPlanBottomSheet({super.key});
@@ -256,13 +257,13 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   void _savePlan() {
     if (_titleController.text.trim().isEmpty) {
-      _showError('Vui lòng nhập tên kế hoạch');
+      showToast('Vui lòng nhập tên kế hoạch');
       return;
     }
 
     for (var phase in _phases) {
       if (phase.tasks.isEmpty) {
-        _showError('Mỗi giai đoạn phải có ít nhất 1 nhiệm vụ');
+        showToast('Vui lòng nhập nhiệm vụ');
         return;
       }
     }
@@ -438,17 +439,13 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     );
   }
 
-  void _showError(String message) {
-    final messenger = ScaffoldMessenger.of(Navigator.of(context).context);
-
-    messenger.clearSnackBars();
-
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-      ),
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      gravity: ToastGravity.TOP,
+      backgroundColor: Colors.white,
+      textColor: Colors.black,
+      fontSize: 14,
     );
   }
 }
