@@ -140,14 +140,10 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                       border: InputBorder.none,
                       isDense: true,
                     ),
-                    onSubmitted: (value) {
-                      setState(() {
-                        if (value.trim().isNotEmpty) {
-                          phase.title = value.trim();
-                        }
-                        _editingPhaseTitleIndex = null;
-                      });
-                    },
+
+                    onSubmitted: _savePhaseTitle,
+                    onTapOutside: (_) =>
+                        _savePhaseTitle(_phaseTitleController.text),
                   )
                 else
                   GestureDetector(
@@ -193,17 +189,25 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                         border: InputBorder.none,
                         isDense: true,
                       ),
+
                       onSubmitted: (value) {
                         if (value.trim().isEmpty) {
                           setState(() => _editingPhaseIndex = null);
                           return;
                         }
 
-                        setState(() {
-                          phase.tasks.add(TaskModel(title: value.trim()));
-                          _taskController.clear();
-                          _editingPhaseIndex = null;
-                        });
+                        _addTask(index, value.trim());
+                      },
+
+                      onTapOutside: (_) {
+                        final value = _taskController.text.trim();
+
+                        if (value.isEmpty) {
+                          setState(() => _editingPhaseIndex = null);
+                          return;
+                        }
+
+                        _addTask(index, value);
                       },
                     ),
                   ),
@@ -249,9 +253,11 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     });
   }
 
-  void _addTask(int phaseIndex) {
+  void _addTask(int phaseIndex, String title) {
     setState(() {
-      _phases[phaseIndex].tasks.add(TaskModel(title: 'Nhiệm vụ mới'));
+      _phases[phaseIndex].tasks.add(TaskModel(title: title));
+      _editingPhaseIndex = null;
+      _taskController.clear();
     });
   }
 
@@ -261,11 +267,18 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       return;
     }
 
-    for (var phase in _phases) {
-      if (phase.tasks.isEmpty) {
-        showToast('Vui lòng nhập nhiệm vụ');
+    for (int i = 0; i < _phases.length; i++) {
+      if (_phases[i].tasks.isEmpty) {
+        showToast('Giai đoạn ${i + 1} chưa có nhiệm vụ');
         return;
       }
+    }
+
+    _startDate ??= DateTime.now();
+    _endDate ??= DateTime.now();
+
+    if (_endDate!.isBefore(_startDate!)) {
+      _endDate = _startDate;
     }
 
     final newPlan = PlanModel(
@@ -447,5 +460,18 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       textColor: Colors.black,
       fontSize: 14,
     );
+  }
+
+  void _savePhaseTitle(String value) {
+    final newTitle = value.trim();
+
+    setState(() {
+      if (newTitle.isNotEmpty && _editingPhaseTitleIndex != null) {
+        _phases[_editingPhaseTitleIndex!].title = newTitle;
+      }
+      _editingPhaseTitleIndex = null;
+    });
+
+    FocusScope.of(context).unfocus();
   }
 }
