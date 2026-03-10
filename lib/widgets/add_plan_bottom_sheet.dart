@@ -268,6 +268,13 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       }
     }
 
+    _startDate ??= DateTime.now();
+    _endDate ??= DateTime.now();
+
+    if (_endDate!.isBefore(_startDate!)) {
+      _endDate = _startDate;
+    }
+
     final newPlan = PlanModel(
       title: _titleController.text.trim(),
       category: _category,
