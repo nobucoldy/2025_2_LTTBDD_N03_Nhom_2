@@ -4,26 +4,29 @@ import 'category_data.dart';
 
 final List<PlanModel> samplePlans = [
   PlanModel(
-    title: 'Tập gym',
+    title: 'Tập gym mỗi sáng',
     category: sampleCategories.firstWhere((c) => c.id == 'health'),
     startDate: DateTime.now(),
     endDate: DateTime.now().add(const Duration(days: 7)),
-    phases: [PhaseModel(title: 'Tuần 1', tasks: [])],
+    phases: [PhaseModel(title: 'Tuần khởi động', tasks: [])],
+    isDone: false, // Kế hoạch đang thực hiện
   ),
 
   PlanModel(
-    title: 'Học Flutter',
+    title: 'Học cơ bản về Flutter',
     category: sampleCategories.firstWhere((c) => c.id == 'study'),
     startDate: DateTime.now().add(const Duration(days: 1)),
     endDate: DateTime.now().add(const Duration(days: 30)),
-    phases: [PhaseModel(title: 'Cơ bản', tasks: [])],
+    phases: [PhaseModel(title: 'Làm quen Widget', tasks: [])],
+    isDone: false,
   ),
 
   PlanModel(
-    title: 'Tiết kiệm tiền',
+    title: 'Mua khóa học thiết kế UI',
     category: sampleCategories.firstWhere((c) => c.id == 'finance'),
-    startDate: DateTime.now(),
-    endDate: DateTime.now().add(const Duration(days: 90)),
-    phases: [PhaseModel(title: 'Tháng 1', tasks: [])],
+    startDate: DateTime.now().subtract(const Duration(days: 2)),
+    endDate: DateTime.now().subtract(const Duration(days: 1)),
+    phases: [PhaseModel(title: 'Thanh toán', tasks: [])],
+    isDone: true,
   ),
 ];

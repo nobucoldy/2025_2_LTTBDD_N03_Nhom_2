@@ -4,9 +4,10 @@ import 'phase_model.dart';
 class PlanModel {
   final String title;
   final CategoryModel? category;
-  final DateTime? startDate;
-  final DateTime? endDate;
+  DateTime? startDate;
+  DateTime? endDate;
   final List<PhaseModel> phases;
+  bool isDone;
 
   PlanModel({
     required this.title,
@@ -14,5 +15,6 @@ class PlanModel {
     this.startDate,
     this.endDate,
     required this.phases,
+    this.isDone = false,
   });
 }
