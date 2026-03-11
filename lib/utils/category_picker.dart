@@ -26,14 +26,38 @@ class CategoryPickerService {
     return await showMenu<CategoryModel?>(
       context: context,
       position: position,
+      constraints: const BoxConstraints(maxWidth: 220, maxHeight: 350),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       items: [
+        PopupMenuItem<CategoryModel?>(
+          value: const CategoryModel(
+            id: 'add_new_id',
+            name: 'Add New',
+            icon: Icons.add,
+          ),
+          child: const Row(
+            children: [
+              Icon(Icons.add_circle_outline, size: 18, color: Colors.blue),
+              SizedBox(width: 12),
+              Text(
+                'Thêm thể loại mới',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const PopupMenuDivider(),
+
         _buildPopupItem(
           null,
           'Không thể loại',
           Icons.folder_off_rounded,
           Colors.grey,
         ),
+
         ...sampleCategories.map(
           (cat) => _buildPopupItem(cat, cat.name, cat.icon, Colors.purple),
         ),
@@ -53,7 +77,13 @@ class CategoryPickerService {
         children: [
           Icon(icon, size: 18, color: color),
           const SizedBox(width: 12),
-          Text(text, style: const TextStyle(fontSize: 14)),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 14),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );

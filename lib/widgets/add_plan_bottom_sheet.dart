@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../data/category_data.dart';
 import '../models/plan_model.dart';
 import '../models/phase_model.dart';
 import '../models/category_model.dart';
@@ -120,7 +121,14 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
               context: context,
               anchorKey: _categoryKey,
             );
-            if (selected != null) setState(() => _category = selected);
+
+            if (selected != null) {
+              if (selected.id == 'add_new_id') {
+                _showAddCategoryDialog();
+              } else {
+                setState(() => _category = selected);
+              }
+            }
           },
         ),
         InfoChip(
@@ -272,5 +280,48 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       phases: List.from(_phases),
     );
     Navigator.pop(context, newPlan);
+  }
+
+  void _showAddCategoryDialog() {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Tạo thể loại mới"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: const InputDecoration(hintText: "Tên thể loại..."),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Hủy"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.purple,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              if (controller.text.isNotEmpty) {
+                final newCat = CategoryModel(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  name: controller.text,
+                  icon: Icons.folder,
+                );
+
+                sampleCategories.add(newCat);
+
+                setState(() => _category = newCat);
+                Navigator.pop(ctx);
+              }
+            },
+            child: const Text("Lưu lại"),
+          ),
+        ],
+      ),
+    );
   }
 }
