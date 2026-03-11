@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomDatePicker extends StatefulWidget {
   final DateTime initialDate;
-  final DateTime? referenceDate; // Đây là ngày bắt đầu của kế hoạch
+  final DateTime? referenceDate;
   final Function(DateTime) onDateSelected;
 
   const CustomDatePicker({
@@ -25,15 +25,10 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
     tempDate = widget.initialDate;
   }
 
-  // SỬA LOGIC TẠI ĐÂY
   void _addMonthsFromReference(int monthsToAdd) {
-    // 1. Luôn lấy mốc cố định là referenceDate (Ngày bắt đầu)
-    // Nếu không có referenceDate thì mới lấy ngày hiện tại
     final DateTime baseDate = widget.referenceDate ?? DateTime.now();
 
     setState(() {
-      // 2. Tạo ngày mới bằng cách giữ nguyên Day, nhưng cộng thêm Month vào baseDate
-      // Dart sẽ tự động xử lý việc tràn tháng (vd: 31/1 + 1 tháng thành đầu tháng 3)
       tempDate = DateTime(
         baseDate.year,
         baseDate.month + monthsToAdd,
@@ -50,7 +45,6 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
         children: [
           Expanded(
             child: CalendarDatePicker(
-              // ValueKey cực kỳ quan trọng: Khi tempDate đổi, lịch sẽ tự cuộn tới tháng đó
               key: ValueKey(tempDate),
               initialDate: tempDate,
               firstDate:

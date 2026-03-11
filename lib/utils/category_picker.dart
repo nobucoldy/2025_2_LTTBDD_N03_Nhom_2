@@ -29,6 +29,18 @@ class CategoryPickerService {
       constraints: const BoxConstraints(maxWidth: 220, maxHeight: 350),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       items: [
+        _buildPopupItem(
+          null,
+          'Không thể loại',
+          Icons.folder_off_rounded,
+          Colors.grey,
+        ),
+
+        ...sampleCategories.map(
+          (cat) => _buildPopupItem(cat, cat.name, cat.icon, Colors.purple),
+        ),
+
+        const PopupMenuDivider(),
         PopupMenuItem<CategoryModel?>(
           value: const CategoryModel(
             id: 'add_new_id',
@@ -48,18 +60,6 @@ class CategoryPickerService {
               ),
             ],
           ),
-        ),
-        const PopupMenuDivider(),
-
-        _buildPopupItem(
-          null,
-          'Không thể loại',
-          Icons.folder_off_rounded,
-          Colors.grey,
-        ),
-
-        ...sampleCategories.map(
-          (cat) => _buildPopupItem(cat, cat.name, cat.icon, Colors.purple),
         ),
       ],
     );

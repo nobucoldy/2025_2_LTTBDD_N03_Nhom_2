@@ -87,7 +87,6 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         foregroundColor: Colors.black,
-        // ĐƯA TIÊU ĐỀ LÊN APPBAR VÀ CHO PHÉP SỬA
         title: TextField(
           controller: _titleController,
           style: const TextStyle(
@@ -102,7 +101,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
           ),
           onChanged: (val) => plan.title = val,
         ),
-        titleSpacing: 0, // Giúp TextField sát lại nút Back
+        titleSpacing: 0,
       ),
       body: Column(
         children: [
@@ -114,7 +113,6 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                 children: [
                   const SizedBox(height: 16),
 
-                  // 1. Trình bày Thể loại và Thời gian dạng Chip
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -168,7 +166,6 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 2. Danh sách các giai đoạn
                   ...plan.phases.map((phase) => _buildPhaseDetail(phase)),
                 ],
               ),

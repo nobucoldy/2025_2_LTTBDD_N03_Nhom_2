@@ -28,7 +28,32 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   ];
 
   final GlobalKey _categoryKey = GlobalKey();
-
+  final List<IconData> _quickIcons = [
+    Icons.folder,
+    Icons.work,
+    Icons.school,
+    Icons.star,
+    Icons.favorite,
+    Icons.fitness_center,
+    Icons.directions_run,
+    Icons.restaurant,
+    Icons.shopping_cart,
+    Icons.auto_stories,
+    Icons.brush,
+    Icons.camera_alt,
+    Icons.computer,
+    Icons.movie,
+    Icons.flight,
+    Icons.directions_car,
+    Icons.home,
+    Icons.payments,
+    Icons.self_improvement,
+    Icons.rocket_launch,
+    Icons.event_note,
+    Icons.build,
+    Icons.lightbulb,
+    Icons.pets,
+  ];
   @override
   void dispose() {
     _titleController.dispose();
@@ -284,43 +309,138 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   void _showAddCategoryDialog() {
     final controller = TextEditingController();
+    IconData selectedIcon = Icons.folder;
+    bool isPickerVisible = false;
+
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text("Tạo thể loại mới"),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          decoration: const InputDecoration(hintText: "Tên thể loại..."),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text("Hủy"),
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text("Tạo thể loại mới"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.purple,
-              foregroundColor: Colors.white,
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: controller,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: "Tên thể loại...",
+                    prefixIcon: Icon(Icons.edit_note),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                InkWell(
+                  onTap: () =>
+                      setDialogState(() => isPickerVisible = !isPickerVisible),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(selectedIcon, color: Colors.purple),
+                        const SizedBox(width: 12),
+                        const Expanded(child: Text("Chọn biểu tượng đại diện")),
+                        Icon(
+                          isPickerVisible
+                              ? Icons.expand_less
+                              : Icons.expand_more,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                if (isPickerVisible) ...[
+                  const SizedBox(height: 15),
+                  SizedBox(
+                    height: 150,
+                    width: double.maxFinite,
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8,
+                          ),
+                      itemCount: _quickIcons.length,
+                      itemBuilder: (context, index) {
+                        final icon = _quickIcons[index];
+                        final isSelected = selectedIcon == icon;
+                        return GestureDetector(
+                          onTap: () {
+                            setDialogState(() {
+                              selectedIcon = icon;
+                              isPickerVisible = false;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: isSelected ? Colors.purple : Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: isSelected
+                                    ? Colors.purple
+                                    : Colors.grey[300]!,
+                              ),
+                            ),
+                            child: Icon(
+                              icon,
+                              color: isSelected
+                                  ? Colors.white
+                                  : Colors.grey[600],
+                              size: 18,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ],
             ),
-            onPressed: () {
-              if (controller.text.isNotEmpty) {
-                final newCat = CategoryModel(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                  name: controller.text,
-                  icon: Icons.folder,
-                );
-
-                sampleCategories.add(newCat);
-
-                setState(() => _category = newCat);
-                Navigator.pop(ctx);
-              }
-            },
-            child: const Text("Lưu lại"),
           ),
-        ],
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text("Hủy"),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                if (controller.text.trim().isNotEmpty) {
+                  final newCat = CategoryModel(
+                    id: DateTime.now().millisecondsSinceEpoch.toString(),
+                    name: controller.text.trim(),
+                    icon: selectedIcon,
+                  );
+                  sampleCategories.add(newCat);
+                  setState(() => _category = newCat);
+                  Navigator.pop(ctx);
+                }
+              },
+              child: const Text("Lưu lại"),
+            ),
+          ],
+        ),
       ),
     );
   }
