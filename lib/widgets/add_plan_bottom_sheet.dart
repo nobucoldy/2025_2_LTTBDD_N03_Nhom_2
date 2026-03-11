@@ -7,7 +7,7 @@ import '../models/task_model.dart';
 import '../widgets/info_chip.dart';
 import '../widgets/phase_item.dart';
 import '../utils/category_picker.dart';
-import 'custom_date_picker.dart';
+import '../utils/date_picker.dart';
 
 class AddPlanBottomSheet extends StatefulWidget {
   const AddPlanBottomSheet({super.key});
@@ -212,30 +212,19 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   }
 
   void _pickDate(bool isStart) {
-    showModalBottomSheet(
+    DatePickerService.show(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-      ),
-      builder: (_) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            CustomDatePicker(
-              initialDate: (isStart ? _startDate : _endDate) ?? DateTime.now(),
-              onDateSelected: (date) =>
-                  setState(() => isStart ? _startDate = date : _endDate = date),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+      initialDate: (isStart ? _startDate : _endDate) ?? DateTime.now(),
+      referenceDate: _startDate,
+      onDateSelected: (date) {
+        setState(() {
+          if (isStart) {
+            _startDate = date;
+          } else {
+            _endDate = date;
+          }
+        });
+      },
     );
   }
 
@@ -244,6 +233,34 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       Fluttertoast.showToast(
         msg: "Vui lòng nhập tên kế hoạch",
         gravity: ToastGravity.TOP,
+      );
+      return;
+    }
+
+    if (_endDate == null) {
+      Fluttertoast.showToast(
+        msg: "Vui lòng chọn ngày kết thúc",
+        gravity: ToastGravity.TOP,
+      );
+      return;
+    }
+
+    final DateTime start = DateTime(
+      _startDate!.year,
+      _startDate!.month,
+      _startDate!.day,
+    );
+    final DateTime end = DateTime(
+      _endDate!.year,
+      _endDate!.month,
+      _endDate!.day,
+    );
+    if (start.isAfter(end)) {
+      Fluttertoast.showToast(
+        msg: "Ngày kết thúc phải sau ngày bắt đầu",
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
       );
       return;
     }

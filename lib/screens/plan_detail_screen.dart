@@ -58,6 +58,9 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
               initialDate:
                   (isStart ? widget.plan.startDate : widget.plan.endDate) ??
                   DateTime.now(),
+
+              referenceDate: widget.plan.startDate,
+
               onDateSelected: (date) {
                 setState(() {
                   if (isStart)
