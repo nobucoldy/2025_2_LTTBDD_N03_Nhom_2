@@ -68,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final activePlans = allFiltered.where((p) => !p.isDone).toList();
     final completedPlans = allFiltered.where((p) => p.isDone).toList();
-
     final groupedActive = groupPlansByTime(activePlans);
 
     return Column(
@@ -78,10 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
           if (entry.value.isEmpty) return const SizedBox.shrink();
           return _buildSection(entry.key, entry.value);
         }),
-
         if (completedPlans.isNotEmpty)
           _buildSection("Đã hoàn thành", completedPlans, isDoneSection: true),
-
         const SizedBox(height: 80),
       ],
     );
@@ -115,25 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildSlidableItem(PlanModel plan) {
     return Slidable(
       key: ObjectKey(plan),
-      startActionPane: ActionPane(
-        motion: const DrawerMotion(),
-        extentRatio: 0.25,
-        children: [
-          CustomSlidableAction(
-            onPressed: (context) {
-              setState(() => plan.isDone = !plan.isDone);
-            },
-            backgroundColor: Colors.transparent,
-            child: _buildActionButton(
-              icon: plan.isDone
-                  ? Icons.undo_rounded
-                  : Icons.check_circle_rounded,
-              color: Colors.green,
-              label: plan.isDone ? 'Hoàn tác' : 'Xong',
-            ),
-          ),
-        ],
-      ),
+
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
         extentRatio: 0.35,
@@ -145,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildActionButton(
               icon: Icons.calendar_month_rounded,
               color: Colors.orangeAccent,
-              label: 'Hạn chót',
+              label: '',
             ),
           ),
           CustomSlidableAction(
@@ -157,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildActionButton(
               icon: Icons.delete_outline_rounded,
               color: Colors.redAccent,
-              label: 'Xóa',
+              label: '',
             ),
           ),
         ],
@@ -183,27 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(height: 2),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: color,
-                  fontSize: 9,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+      child: Center(child: Icon(icon, color: color, size: 26)),
     );
   }
 
@@ -232,11 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             _buildTopBar(),
-
             _buildCategoryFilter(),
-
             const SizedBox(height: 10),
-
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
