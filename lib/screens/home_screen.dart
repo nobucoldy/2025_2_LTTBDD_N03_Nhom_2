@@ -187,7 +187,9 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: () async {
           await Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => PlanDetailScreen(plan: plan)),
+            MaterialPageRoute(
+              builder: (_) => PlanDetailScreen(plan: plan, locale: _locale),
+            ),
           );
           setState(() {});
         },
