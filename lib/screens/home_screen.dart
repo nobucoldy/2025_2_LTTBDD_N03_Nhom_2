@@ -298,7 +298,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             builder: (context) => const AddPlanBottomSheet(),
           );
-          if (newPlan != null) setState(() => samplePlans.add(newPlan));
+
+          setState(() {
+            if (newPlan != null) {
+              samplePlans.add(newPlan);
+            }
+          });
           return;
         }
         setState(() => _selectedIndex = index);
