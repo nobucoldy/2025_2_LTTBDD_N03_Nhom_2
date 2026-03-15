@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/phase_model.dart';
+import '../data/language_data.dart';
 
 class PhaseItem extends StatefulWidget {
   final int index;
@@ -7,6 +8,7 @@ class PhaseItem extends StatefulWidget {
   final Function(String) onTitleChanged;
   final Function(String) onAddTask;
   final VoidCallback onDeletePhase;
+  final String locale;
 
   const PhaseItem({
     super.key,
@@ -15,6 +17,7 @@ class PhaseItem extends StatefulWidget {
     required this.onTitleChanged,
     required this.onAddTask,
     required this.onDeletePhase,
+    required this.locale,
   });
 
   @override
@@ -24,6 +27,8 @@ class PhaseItem extends StatefulWidget {
 class _PhaseItemState extends State<PhaseItem> {
   bool _isAddingTask = false;
   final TextEditingController _taskController = TextEditingController();
+
+  String t(String key) => localizedText[widget.locale]?[key] ?? key;
 
   void _submitTask() {
     if (_taskController.text.trim().isNotEmpty) {
@@ -103,7 +108,12 @@ class _PhaseItemState extends State<PhaseItem> {
                     color: Colors.grey[400],
                   ),
                   const SizedBox(width: 10),
-                  Text(task.title, style: const TextStyle(fontSize: 14)),
+                  Expanded(
+                    child: Text(
+                      task.title,
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -113,10 +123,10 @@ class _PhaseItemState extends State<PhaseItem> {
             TextField(
               controller: _taskController,
               autofocus: true,
-              decoration: const InputDecoration(
-                hintText: 'Việc cần làm...',
+              decoration: InputDecoration(
+                hintText: t('add_task_hint'),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 28),
+                contentPadding: const EdgeInsets.only(left: 28),
               ),
               onSubmitted: (_) => _submitTask(),
               onTapOutside: (_) => _submitTask(),
@@ -125,7 +135,7 @@ class _PhaseItemState extends State<PhaseItem> {
             TextButton.icon(
               onPressed: () => setState(() => _isAddingTask = true),
               icon: const Icon(Icons.add_rounded, size: 18),
-              label: const Text("Thêm nhiệm vụ"),
+              label: Text(t('add_task')),
               style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
             ),
         ],

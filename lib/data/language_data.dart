@@ -54,6 +54,10 @@ const Map<String, Map<String, String>> localizedText = {
     'add_cat_hint': 'Tên thể loại...',
     'add_cat_pick_icon': 'Chọn biểu tượng đại diện',
     'add_btn_save': 'Lưu lại',
+    'cat_none': 'Không có thể loại nào',
+    'cat_add_new': 'Thêm mới',
+    'add_task': 'Thêm nhiệm vụ',
+    'add_task_hint': 'Việc cần làm...',
   },
   'en': {
     'title': 'Plans',
@@ -110,5 +114,9 @@ const Map<String, Map<String, String>> localizedText = {
     'add_cat_hint': 'Category name...',
     'add_cat_pick_icon': 'Select representative icon',
     'add_btn_save': 'Save',
+    'cat_none': 'No categories',
+    'cat_add_new': 'Add new',
+    'add_task': 'Add task',
+    'add_task_hint': 'To-do item...',
   },
 };

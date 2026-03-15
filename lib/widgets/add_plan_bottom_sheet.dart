@@ -185,7 +185,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
               final selected = await CategoryPickerService.show(
                 context: context,
                 anchorKey: _categoryKey,
-                locale: widget.locale, // Truyền locale vào picker
+                locale: widget.locale,
               );
               if (selected?.id == 'add_new_id') {
                 _showAddCategoryDialog();
@@ -236,6 +236,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
           key: ValueKey(entry.value),
           index: entry.key,
           phase: entry.value,
+          locale: widget.locale,
           onTitleChanged: (newTitle) {
             entry.value.title = newTitle;
           },
