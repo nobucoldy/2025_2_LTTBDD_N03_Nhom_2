@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/plan_model.dart';
 import '../models/phase_model.dart';
+import '../utils/add_category_dialog.dart';
 import '../utils/alert.dart';
 import '../widgets/info_chip.dart';
 import '../widgets/custom_date_picker.dart';
@@ -194,9 +195,21 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
               locale: widget.locale,
             );
 
-            if (selected != null && selected.id != 'add_new_id') {
+            if (selected?.id == 'add_new_id') {
+              final newCat = await showAddCategoryDialog(
+                context,
+                widget.locale,
+                t,
+              );
+
+              if (newCat != null) {
+                setState(() {
+                  plan.category = newCat;
+                });
+              }
+            } else if (selected != null) {
               setState(() => plan.category = selected);
-            } else if (selected == null) {
+            } else {
               setState(() => plan.category = null);
             }
           },

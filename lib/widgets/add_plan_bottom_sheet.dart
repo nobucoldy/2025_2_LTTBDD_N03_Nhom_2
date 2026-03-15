@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../data/category_data.dart';
 import '../models/plan_model.dart';
 import '../models/phase_model.dart';
 import '../models/category_model.dart';
 import '../models/task_model.dart';
+import '../utils/add_category_dialog.dart';
 import '../utils/alert.dart';
 import '../widgets/info_chip.dart';
 import '../widgets/phase_item.dart';
@@ -38,32 +38,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   }
 
   final GlobalKey _categoryKey = GlobalKey();
-  final List<IconData> _quickIcons = [
-    Icons.folder,
-    Icons.work,
-    Icons.school,
-    Icons.star,
-    Icons.favorite,
-    Icons.fitness_center,
-    Icons.directions_run,
-    Icons.restaurant,
-    Icons.shopping_cart,
-    Icons.auto_stories,
-    Icons.brush,
-    Icons.camera_alt,
-    Icons.computer,
-    Icons.movie,
-    Icons.flight,
-    Icons.directions_car,
-    Icons.home,
-    Icons.payments,
-    Icons.self_improvement,
-    Icons.rocket_launch,
-    Icons.event_note,
-    Icons.build,
-    Icons.lightbulb,
-    Icons.pets,
-  ];
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -188,9 +163,15 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
               );
 
               if (selected?.id == 'add_new_id') {
-                Future.delayed(const Duration(milliseconds: 200), () {
-                  _showAddCategoryDialog();
-                });
+                final newCat = await showAddCategoryDialog(
+                  context,
+                  widget.locale,
+                  t,
+                );
+
+                if (newCat != null) {
+                  setState(() => _category = newCat);
+                }
               } else {
                 setState(() => _category = selected);
               }
@@ -370,143 +351,5 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       phases: List.from(_phases),
     );
     Navigator.pop(context, newPlan);
-  }
-
-  void _showAddCategoryDialog() {
-    final controller = TextEditingController();
-    IconData selectedIcon = Icons.folder;
-    bool isPickerVisible = false;
-
-    showDialog(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          title: Text(t('add_cat_dialog_title')),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: controller,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    hintText: t('add_cat_hint'),
-                    prefixIcon: Icon(Icons.edit_note),
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                InkWell(
-                  onTap: () =>
-                      setDialogState(() => isPickerVisible = !isPickerVisible),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(selectedIcon, color: Colors.purple),
-                        const SizedBox(width: 12),
-                        Expanded(child: Text(t('add_cat_pick_icon'))),
-                        Icon(
-                          isPickerVisible
-                              ? Icons.expand_less
-                              : Icons.expand_more,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                if (isPickerVisible) ...[
-                  const SizedBox(height: 15),
-                  SizedBox(
-                    height: 150,
-                    width: double.maxFinite,
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                          ),
-                      itemCount: _quickIcons.length,
-                      itemBuilder: (context, index) {
-                        final icon = _quickIcons[index];
-                        final isSelected = selectedIcon == icon;
-                        return GestureDetector(
-                          onTap: () {
-                            setDialogState(() {
-                              selectedIcon = icon;
-                              isPickerVisible = false;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: isSelected ? Colors.purple : Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: isSelected
-                                    ? Colors.purple
-                                    : Colors.grey[300]!,
-                              ),
-                            ),
-                            child: Icon(
-                              icon,
-                              color: isSelected
-                                  ? Colors.white
-                                  : Colors.grey[600],
-                              size: 18,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(t('btn_cancel')),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onPressed: () {
-                if (controller.text.trim().isNotEmpty) {
-                  final newCat = CategoryModel(
-                    id: DateTime.now().millisecondsSinceEpoch.toString(),
-                    name: controller.text.trim(),
-                    icon: selectedIcon,
-                  );
-                  sampleCategories.add(newCat);
-                  setState(() => _category = newCat);
-                  Navigator.pop(ctx);
-                }
-              },
-              child: Text(t('add_btn_save')),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
