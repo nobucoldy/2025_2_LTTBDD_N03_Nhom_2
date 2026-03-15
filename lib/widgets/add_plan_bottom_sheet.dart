@@ -134,14 +134,43 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
   }
 
   Widget _buildDescriptionInput() {
-    return TextField(
-      controller: _descriptionController,
-      maxLines: null,
-      style: const TextStyle(fontSize: 15, color: Colors.black87),
-      decoration: InputDecoration(
-        hintText: 'Ghi chú... ',
-        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 15),
-        border: InputBorder.none,
+    return Container(
+      margin: const EdgeInsets.only(top: 4, bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: TextField(
+        controller: _descriptionController,
+        maxLength: 100,
+        maxLines: 1,
+        style: const TextStyle(fontSize: 14, color: Colors.black87),
+        textInputAction: TextInputAction.done,
+        onSubmitted: (value) {
+          setState(() {
+            _descriptionController.text = value.trim();
+          });
+          FocusScope.of(context).unfocus();
+        },
+
+        onTapOutside: (event) {
+          FocusScope.of(context).unfocus();
+        },
+
+        decoration: InputDecoration(
+          hintText: 'Thêm ghi chú...',
+          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
+          border: InputBorder.none,
+          counterText: "",
+          icon: Icon(
+            Icons.edit_note_rounded,
+            color: Colors.grey[400],
+            size: 20,
+          ),
+          isDense: true,
+        ),
       ),
     );
   }
