@@ -9,7 +9,6 @@ final List<PlanModel> samplePlans = [
     category: sampleCategories.firstWhere((c) => c.id == 'study'),
     startDate: DateTime(2026, 1, 1),
     endDate: DateTime(2026, 6, 30),
-    isDone: false,
     phases: [
       PhaseModel(
         title: 'Xây dựng nền tảng (Tháng 1-2)',
@@ -44,7 +43,6 @@ final List<PlanModel> samplePlans = [
     category: sampleCategories.firstWhere((c) => c.id == 'health'),
     startDate: DateTime.now(),
     endDate: DateTime.now().add(const Duration(days: 90)),
-    isDone: false,
     phases: [
       PhaseModel(
         title: 'Làm quen cơ thể (Tuần 1-4)',
@@ -75,7 +73,6 @@ final List<PlanModel> samplePlans = [
     category: sampleCategories.firstWhere((c) => c.id == 'work'),
     startDate: DateTime.now().subtract(const Duration(days: 10)),
     endDate: DateTime.now().add(const Duration(days: 45)),
-    isDone: false,
     phases: [
       PhaseModel(
         title: 'Chuẩn bị nội dung',

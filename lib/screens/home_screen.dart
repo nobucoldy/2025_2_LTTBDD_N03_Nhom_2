@@ -142,10 +142,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       child: GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => PlanDetailScreen(plan: plan)),
-        ),
+        onTap: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => PlanDetailScreen(plan: plan)),
+          );
+
+          setState(() {});
+        },
         child: planCard(plan),
       ),
     );

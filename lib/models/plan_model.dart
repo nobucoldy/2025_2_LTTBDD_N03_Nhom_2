@@ -7,14 +7,22 @@ class PlanModel {
   DateTime? startDate;
   DateTime? endDate;
   List<PhaseModel> phases;
-  bool isDone;
 
   PlanModel({
     required this.title,
-    required this.category,
+    this.category,
     this.startDate,
     this.endDate,
     required this.phases,
-    this.isDone = false,
   });
+
+  bool get isDone {
+    if (phases.isEmpty) return false;
+
+    final allTasks = phases.expand((phase) => phase.tasks).toList();
+
+    if (allTasks.isEmpty) return false;
+
+    return allTasks.every((task) => task.isDone);
+  }
 }

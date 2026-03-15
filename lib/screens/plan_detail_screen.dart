@@ -80,6 +80,8 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final plan = widget.plan;
+    final progress = _calculateProgress();
+    final isDone = _isPlanCompleted();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -170,7 +172,63 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                       ),
                     ],
                   ),
-
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Text(
+                        isDone ? "KẾ HOẠCH HOÀN THÀNH" : "TIẾN ĐỘ",
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          color: isDone ? Colors.green : Colors.grey,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        "${(progress * 100).toInt()}%",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: isDone ? Colors.green : Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 8,
+                      backgroundColor: Colors.grey[200],
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        isDone ? Colors.green : Colors.purple,
+                      ),
+                    ),
+                  ),
+                  if (isDone)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 16,
+                          ),
+                          SizedBox(width: 6),
+                          Text(
+                            "Tuyệt vời! Bạn đã hoàn thành mọi thứ.",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   const Divider(height: 40),
 
                   const Text(
@@ -240,5 +298,19 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
         ],
       ),
     );
+  }
+
+  double _calculateProgress() {
+    final allTasks = widget.plan.phases.expand((p) => p.tasks).toList();
+    if (allTasks.isEmpty) return 0.0;
+
+    final completedTasks = allTasks.where((t) => t.isDone).length;
+    return completedTasks / allTasks.length;
+  }
+
+  bool _isPlanCompleted() {
+    final allTasks = widget.plan.phases.expand((p) => p.tasks).toList();
+    if (allTasks.isEmpty) return false;
+    return allTasks.every((t) => t.isDone);
   }
 }
