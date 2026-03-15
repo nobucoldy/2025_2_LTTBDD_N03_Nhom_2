@@ -113,6 +113,54 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 8),
+
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[50],
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey[100]!),
+                    ),
+                    child: TextFormField(
+                      initialValue: plan.description,
+                      maxLength: 150,
+                      maxLines: null,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[700],
+                        height: 1.4,
+                      ),
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (val) {
+                        setState(() => plan.description = val.trim());
+                        FocusScope.of(context).unfocus();
+                      },
+                      onTapOutside: (event) {
+                        FocusScope.of(context).unfocus();
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Thêm ghi chú ngắn về kế hoạch...',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 13,
+                        ),
+                        border: InputBorder.none,
+                        isDense: true,
+                        counterText: "",
+                        icon: Icon(
+                          Icons.notes_rounded,
+                          color: Colors.grey[400],
+                          size: 18,
+                        ),
+                      ),
+                      onChanged: (val) => plan.description = val,
+                    ),
+                  ),
+
                   const SizedBox(height: 16),
 
                   Row(
@@ -141,7 +189,6 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-
                       SizedBox(
                         width: 85,
                         height: 40,
@@ -156,7 +203,6 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-
                       SizedBox(
                         width: 85,
                         height: 40,
@@ -172,7 +218,9 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 24),
+
+                  const Divider(height: 40),
+
                   Row(
                     children: [
                       Text(
@@ -220,15 +268,12 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                           SizedBox(width: 6),
                           Text(
                             "Tuyệt vời! Bạn đã hoàn thành mọi thứ.",
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: TextStyle(color: Colors.green, fontSize: 13),
                           ),
                         ],
                       ),
                     ),
+
                   const Divider(height: 40),
 
                   const Text(
@@ -243,6 +288,8 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                   const SizedBox(height: 16),
 
                   ...plan.phases.map((phase) => _buildPhaseDetail(phase)),
+
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
