@@ -5,6 +5,7 @@ import '../models/plan_model.dart';
 import '../models/phase_model.dart';
 import '../models/category_model.dart';
 import '../models/task_model.dart';
+import '../utils/alert.dart';
 import '../widgets/info_chip.dart';
 import '../widgets/phase_item.dart';
 import '../utils/category_picker.dart';
@@ -323,10 +324,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   void _savePlan() {
     if (_titleController.text.trim().isEmpty) {
-      Fluttertoast.showToast(
-        msg: "Vui lòng nhập tên kế hoạch",
-        gravity: ToastGravity.TOP,
-      );
+      AlertUtils.show(context, "Vui lòng nhập tên kế hoạch", isError: true);
       return;
     }
 
@@ -361,7 +359,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       endDate: finalEndDate,
       phases: List.from(_phases),
     );
-
+    AlertUtils.show(context, "Lưu kế hoạch thành công!");
     Navigator.pop(context, newPlan);
   }
 

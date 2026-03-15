@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/plan_model.dart';
 import '../models/phase_model.dart';
+import '../utils/alert.dart';
 import '../widgets/info_chip.dart';
 import '../widgets/custom_date_picker.dart';
 import '../utils/category_picker.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class PlanDetailScreen extends StatefulWidget {
   final PlanModel plan;
@@ -80,11 +80,10 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                 );
 
                 if (startClean.isAfter(endClean)) {
-                  Fluttertoast.showToast(
-                    msg: "Ngày kết thúc không được trước ngày bắt đầu",
-                    gravity: ToastGravity.TOP,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
+                  AlertUtils.show(
+                    context,
+                    "Ngày kết thúc không được trước ngày bắt đầu",
+                    isError: true,
                   );
                   return;
                 }

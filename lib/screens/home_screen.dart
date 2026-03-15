@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import '../utils/alert.dart';
 import 'about_screen.dart';
 import '../widgets/plan_card.dart';
 import '../widgets/filter_chip.dart';
@@ -114,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
       key: ObjectKey(plan),
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
-        extentRatio: 0.35,
+        extentRatio: 0.45,
         children: [
           CustomSlidableAction(
             onPressed: (context) {
@@ -125,8 +126,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 }
               });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Đã hoàn thành: ${plan.title}')),
+              AlertUtils.show(
+                context,
+                "Kế hoạch '${plan.title}' đã hoàn thành!",
               );
             },
             backgroundColor: Colors.transparent,
@@ -140,7 +142,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
           CustomSlidableAction(
             onPressed: (context) {
-              setState(() => samplePlans.remove(plan));
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  title: const Text("Xác nhận xóa"),
+                  content: Text(
+                    "Bạn có chắc chắn muốn xóa kế hoạch '${plan.title}' không?",
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: const Text("HỦY"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() => samplePlans.remove(plan));
+                        Navigator.pop(ctx);
+                        AlertUtils.show(context, "Đã xóa kế hoạch thành công");
+                      },
+                      child: const Text(
+                        "XÓA",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             },
             backgroundColor: Colors.transparent,
             padding: EdgeInsets.zero,
@@ -302,6 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             if (newPlan != null) {
               samplePlans.add(newPlan);
+              AlertUtils.show(context, "Đã tạo kế hoạch mới thành công!");
             }
           });
           return;
