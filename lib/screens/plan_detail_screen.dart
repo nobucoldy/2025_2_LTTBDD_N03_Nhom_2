@@ -338,10 +338,9 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
               border: InputBorder.none,
               isDense: true,
             ),
+            onChanged: (val) => phase.title = val,
           ),
-
           const Divider(height: 20),
-
           Column(
             children: List.generate(phase.tasks.length, (index) {
               final task = phase.tasks[index];
@@ -350,9 +349,24 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                 contentPadding: EdgeInsets.zero,
                 value: task.isDone,
                 controlAffinity: ListTileControlAffinity.leading,
-                title: Text(t(task.title)),
+                title: Text(
+                  t(task.title),
+                  style: TextStyle(
+                    decoration: task.isDone ? TextDecoration.lineThrough : null,
+                    color: task.isDone ? Colors.grey : Colors.black,
+                  ),
+                ),
                 onChanged: (val) {
-                  setState(() => task.isDone = val!);
+                  setState(() {
+                    task.isDone = val!;
+                  });
+
+                  if (widget.plan.isDone) {
+                    AlertUtils.show(
+                      context,
+                      "${t('detail_congrats')} '${t(widget.plan.title)}'",
+                    );
+                  }
                 },
               );
             }),
