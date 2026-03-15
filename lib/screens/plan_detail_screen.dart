@@ -181,52 +181,62 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
   Widget _buildInfoChips(PlanModel plan) {
     return Row(
       children: [
-        InfoChip(
-          key: _categoryKey,
-          icon: plan.category?.icon ?? Icons.folder_open,
-          label: plan.category != null ? t(plan.category!.name) : t('all_cat'),
-          color: Colors.purple[50]!,
-          iconColor: Colors.purple,
-          locale: widget.locale,
-          onTap: () async {
-            final selected = await CategoryPickerService.show(
-              context: context,
-              anchorKey: _categoryKey,
-              locale: widget.locale,
-            );
-
-            if (selected?.id == 'add_new_id') {
-              final newCat = await showAddCategoryDialog(
-                context,
-                widget.locale,
-                t,
+        Expanded(
+          child: InfoChip(
+            key: _categoryKey,
+            icon: plan.category?.icon ?? Icons.folder_open,
+            label: plan.category != null
+                ? t(plan.category!.name)
+                : t('all_cat'),
+            color: Colors.purple[50]!,
+            iconColor: Colors.purple,
+            locale: widget.locale,
+            onTap: () async {
+              final selected = await CategoryPickerService.show(
+                context: context,
+                anchorKey: _categoryKey,
+                locale: widget.locale,
               );
 
-              if (newCat != null) {
-                setState(() {
-                  plan.category = newCat;
-                });
+              if (selected?.id == 'add_new_id') {
+                final newCat = await showAddCategoryDialog(
+                  context,
+                  widget.locale,
+                  t,
+                );
+
+                if (newCat != null) {
+                  setState(() => plan.category = newCat);
+                }
+              } else if (selected != null) {
+                setState(() => plan.category = selected);
+              } else {
+                setState(() => plan.category = null);
               }
-            } else if (selected != null) {
-              setState(() => plan.category = selected);
-            } else {
-              setState(() => plan.category = null);
-            }
-          },
+            },
+          ),
         ),
+
         const SizedBox(width: 8),
-        _dateChip(
-          plan.startDate,
-          t('detail_start'),
-          Colors.orange,
-          () => _pickDate(true),
+
+        Expanded(
+          child: _dateChip(
+            plan.startDate,
+            t('detail_start'),
+            Colors.orange,
+            () => _pickDate(true),
+          ),
         ),
+
         const SizedBox(width: 8),
-        _dateChip(
-          plan.endDate,
-          t('detail_end'),
-          Colors.blue,
-          () => _pickDate(false),
+
+        Expanded(
+          child: _dateChip(
+            plan.endDate,
+            t('detail_end'),
+            Colors.blue,
+            () => _pickDate(false),
+          ),
         ),
       ],
     );
