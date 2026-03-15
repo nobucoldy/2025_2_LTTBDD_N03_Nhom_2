@@ -18,6 +18,14 @@ class PlanModel {
     required this.phases,
   });
 
+  double get progress {
+    final allTasks = phases.expand((p) => p.tasks).toList();
+    if (allTasks.isEmpty) return 0.0;
+
+    final completedCount = allTasks.where((t) => t.isDone).length;
+    return completedCount / allTasks.length;
+  }
+
   bool get isDone {
     if (phases.isEmpty) return false;
 

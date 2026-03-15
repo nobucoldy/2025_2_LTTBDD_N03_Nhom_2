@@ -80,8 +80,8 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final plan = widget.plan;
-    final progress = _calculateProgress();
-    final isDone = _isPlanCompleted();
+    final progress = plan.progress;
+    final isDone = plan.isDone;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -345,19 +345,5 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
         ],
       ),
     );
-  }
-
-  double _calculateProgress() {
-    final allTasks = widget.plan.phases.expand((p) => p.tasks).toList();
-    if (allTasks.isEmpty) return 0.0;
-
-    final completedTasks = allTasks.where((t) => t.isDone).length;
-    return completedTasks / allTasks.length;
-  }
-
-  bool _isPlanCompleted() {
-    final allTasks = widget.plan.phases.expand((p) => p.tasks).toList();
-    if (allTasks.isEmpty) return false;
-    return allTasks.every((t) => t.isDone);
   }
 }
