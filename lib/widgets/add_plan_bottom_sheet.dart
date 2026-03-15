@@ -330,13 +330,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       return;
     }
 
-    if (_endDate == null) {
-      Fluttertoast.showToast(
-        msg: "Vui lòng chọn ngày kết thúc",
-        gravity: ToastGravity.TOP,
-      );
-      return;
-    }
+    final DateTime finalEndDate = _endDate ?? (_startDate ?? DateTime.now());
 
     final DateTime start = DateTime(
       _startDate!.year,
@@ -344,10 +338,11 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       _startDate!.day,
     );
     final DateTime end = DateTime(
-      _endDate!.year,
-      _endDate!.month,
-      _endDate!.day,
+      finalEndDate.year,
+      finalEndDate.month,
+      finalEndDate.day,
     );
+
     if (start.isAfter(end)) {
       Fluttertoast.showToast(
         msg: "Ngày kết thúc phải sau ngày bắt đầu",
@@ -357,14 +352,16 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       );
       return;
     }
+
     final newPlan = PlanModel(
       title: _titleController.text.trim(),
       description: _descriptionController.text.trim(),
       category: _category,
       startDate: _startDate ?? DateTime.now(),
-      endDate: _endDate ?? DateTime.now(),
+      endDate: finalEndDate,
       phases: List.from(_phases),
     );
+
     Navigator.pop(context, newPlan);
   }
 

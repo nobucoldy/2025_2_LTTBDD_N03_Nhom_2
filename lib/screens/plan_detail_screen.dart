@@ -4,6 +4,7 @@ import '../models/phase_model.dart';
 import '../widgets/info_chip.dart';
 import '../widgets/custom_date_picker.dart';
 import '../utils/category_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class PlanDetailScreen extends StatefulWidget {
   final PlanModel plan;
@@ -58,15 +59,42 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
               initialDate:
                   (isStart ? widget.plan.startDate : widget.plan.endDate) ??
                   DateTime.now(),
-
               referenceDate: widget.plan.startDate,
-
               onDateSelected: (date) {
+                DateTime currentStart = isStart
+                    ? date
+                    : (widget.plan.startDate ?? DateTime.now());
+                DateTime currentEnd = isStart
+                    ? (widget.plan.endDate ?? DateTime.now())
+                    : date;
+
+                DateTime startClean = DateTime(
+                  currentStart.year,
+                  currentStart.month,
+                  currentStart.day,
+                );
+                DateTime endClean = DateTime(
+                  currentEnd.year,
+                  currentEnd.month,
+                  currentEnd.day,
+                );
+
+                if (startClean.isAfter(endClean)) {
+                  Fluttertoast.showToast(
+                    msg: "Ngày kết thúc không được trước ngày bắt đầu",
+                    gravity: ToastGravity.TOP,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                  );
+                  return;
+                }
+
                 setState(() {
-                  if (isStart)
+                  if (isStart) {
                     widget.plan.startDate = date;
-                  else
+                  } else {
                     widget.plan.endDate = date;
+                  }
                 });
               },
             ),
