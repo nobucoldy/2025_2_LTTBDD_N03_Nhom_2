@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import '../data/language_data.dart';
 
 class CustomDatePicker extends StatefulWidget {
   final DateTime initialDate;
   final DateTime? referenceDate;
   final Function(DateTime) onDateSelected;
+  final String locale;
 
   const CustomDatePicker({
     super.key,
     required this.initialDate,
     this.referenceDate,
     required this.onDateSelected,
+    required this.locale,
   });
 
   @override
@@ -19,6 +22,8 @@ class CustomDatePicker extends StatefulWidget {
 class _CustomDatePickerState extends State<CustomDatePicker> {
   late DateTime tempDate;
 
+  String t(String key) => localizedText[widget.locale]?[key] ?? key;
+
   @override
   void initState() {
     super.initState();
@@ -27,7 +32,6 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
 
   void _addMonthsFromReference(int monthsToAdd) {
     final DateTime baseDate = widget.referenceDate ?? DateTime.now();
-
     setState(() {
       tempDate = DateTime(
         baseDate.year,
@@ -60,11 +64,10 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
               },
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              "Kết thúc vào: ${tempDate.day}/${tempDate.month}/${tempDate.year}",
+              "${t('date_ends_at')}: ${tempDate.day}/${tempDate.month}/${tempDate.year}",
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.purple,
@@ -72,20 +75,18 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
               ),
             ),
           ),
-
-          const Text(
-            "Tính thời hạn từ ngày bắt đầu",
-            style: TextStyle(fontSize: 12, color: Colors.grey),
+          Text(
+            t('date_calc_from_start'),
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
           const SizedBox(height: 12),
-
           Wrap(
             spacing: 10,
             children: [
-              _buildMonthBtn('1 th', 1),
-              _buildMonthBtn('3 th', 3),
-              _buildMonthBtn('6 th', 6),
-              _buildMonthBtn('1 năm', 12),
+              _buildMonthBtn(t('date_1m'), 1),
+              _buildMonthBtn(t('date_3m'), 3),
+              _buildMonthBtn(t('date_6m'), 6),
+              _buildMonthBtn(t('date_1y'), 12),
             ],
           ),
           const SizedBox(height: 16),
@@ -104,7 +105,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                 widget.onDateSelected(tempDate);
                 Navigator.pop(context);
               },
-              child: const Text('Xác nhận chọn ngày'),
+              child: Text(t('date_confirm')),
             ),
           ),
           const SizedBox(height: 20),

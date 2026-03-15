@@ -7,6 +7,7 @@ class DatePickerService {
     required DateTime? initialDate,
     required DateTime? referenceDate,
     required Function(DateTime) onDateSelected,
+    required String locale,
   }) {
     showModalBottomSheet(
       context: context,
@@ -35,6 +36,7 @@ class DatePickerService {
               initialDate: initialDate ?? referenceDate ?? DateTime.now(),
               referenceDate: referenceDate,
               onDateSelected: onDateSelected,
+              locale: locale,
             ),
             const SizedBox(height: 20),
           ],

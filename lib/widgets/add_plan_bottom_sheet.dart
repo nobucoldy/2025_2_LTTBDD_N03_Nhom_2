@@ -181,6 +181,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
             label: _category != null ? t(_category!.name) : t('add_category'),
             color: Colors.purple[50]!,
             iconColor: Colors.purple,
+            locale: widget.locale,
             onTap: () async {
               final selected = await CategoryPickerService.show(
                 context: context,
@@ -224,6 +225,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
         label: date == null ? label : "${date.day}/${date.month}",
         color: color[50]!,
         iconColor: color[700]!,
+        locale: widget.locale,
         onTap: onTap,
       ),
     );
@@ -313,6 +315,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
           }
         });
       },
+      locale: widget.locale,
     );
   }
 

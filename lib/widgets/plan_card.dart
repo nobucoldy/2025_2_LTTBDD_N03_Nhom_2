@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/plan_model.dart';
+import '../data/language_data.dart';
 
-Widget planCard(PlanModel plan) {
+Widget planCard(PlanModel plan, String locale) {
   final bool isDone = plan.isDone;
   final double progress = plan.progress;
+
+  String t(String key) => localizedText[locale]?[key] ?? key;
 
   final Color contentColor = isDone ? Colors.grey.shade400 : Colors.purple;
   final Color titleColor = isDone ? Colors.grey.shade500 : Colors.black87;
@@ -44,6 +47,19 @@ Widget planCard(PlanModel plan) {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (plan.category != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 2),
+                        child: Text(
+                          t(plan.category!.name).toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: contentColor.withOpacity(0.7),
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ),
                     Text(
                       plan.title,
                       style: TextStyle(

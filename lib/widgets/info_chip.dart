@@ -6,6 +6,7 @@ class InfoChip extends StatelessWidget {
   final Color color;
   final Color iconColor;
   final VoidCallback onTap;
+  final String locale;
 
   const InfoChip({
     super.key,
@@ -14,6 +15,7 @@ class InfoChip extends StatelessWidget {
     required this.color,
     required this.iconColor,
     required this.onTap,
+    required this.locale,
   });
 
   @override

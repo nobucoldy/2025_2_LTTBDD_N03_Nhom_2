@@ -193,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
           setState(() {});
         },
-        child: planCard(plan),
+        child: planCard(plan, _locale),
       ),
     );
   }

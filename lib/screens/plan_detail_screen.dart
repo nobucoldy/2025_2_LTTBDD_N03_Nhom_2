@@ -80,6 +80,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                     widget.plan.endDate = date;
                 });
               },
+              locale: widget.locale,
             ),
             const SizedBox(height: 20),
           ],
@@ -185,6 +186,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
           label: plan.category != null ? t(plan.category!.name) : t('all_cat'),
           color: Colors.purple[50]!,
           iconColor: Colors.purple,
+          locale: widget.locale,
           onTap: () async {
             final selected = await CategoryPickerService.show(
               context: context,
@@ -230,6 +232,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
       label: date == null ? placeholder : '${date.day}/${date.month}',
       color: color[50]!,
       iconColor: color[700]!,
+      locale: widget.locale,
       onTap: onTap,
     );
   }
