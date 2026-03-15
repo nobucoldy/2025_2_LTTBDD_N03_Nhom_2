@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import '../models/category_model.dart';
 import '../data/category_data.dart';
+import '../data/language_data.dart';
 
 class CategoryPickerService {
   static Future<CategoryModel?> show({
     required BuildContext context,
     required GlobalKey anchorKey,
+    required String locale,
   }) async {
+    String t(String key) => localizedText[locale]?[key] ?? key;
+
     final RenderBox button =
         anchorKey.currentContext!.findRenderObject() as RenderBox;
     final RenderBox overlay =
@@ -29,37 +33,45 @@ class CategoryPickerService {
       constraints: const BoxConstraints(maxWidth: 220, maxHeight: 400),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       items: [
-        const PopupMenuItem<CategoryModel?>(
+        PopupMenuItem<CategoryModel?>(
           value: null,
           child: Row(
             children: [
-              Icon(Icons.folder_off_rounded, size: 18, color: Colors.grey),
-              SizedBox(width: 12),
-              Text('Không có thể loại', style: TextStyle(fontSize: 14)),
+              const Icon(
+                Icons.folder_off_rounded,
+                size: 18,
+                color: Colors.grey,
+              ),
+              const SizedBox(width: 12),
+              Text(t('cat_none'), style: const TextStyle(fontSize: 14)),
             ],
           ),
         ),
         const PopupMenuDivider(),
 
         ...sampleCategories.map(
-          (cat) => _buildPopupItem(cat, cat.name, cat.icon, Colors.purple),
+          (cat) => _buildPopupItem(cat, t(cat.name), cat.icon, Colors.purple),
         ),
 
         const PopupMenuDivider(),
 
-        const PopupMenuItem<CategoryModel?>(
-          value: CategoryModel(
+        PopupMenuItem<CategoryModel?>(
+          value: const CategoryModel(
             id: 'add_new_id',
-            name: 'Add New',
+            name: 'add_new',
             icon: Icons.add,
           ),
           child: Row(
             children: [
-              Icon(Icons.add_circle_outline, size: 18, color: Colors.blue),
-              SizedBox(width: 12),
+              const Icon(
+                Icons.add_circle_outline,
+                size: 18,
+                color: Colors.blue,
+              ),
+              const SizedBox(width: 12),
               Text(
-                'Thêm thể loại mới',
-                style: TextStyle(
+                t('cat_add_new'),
+                style: const TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
                 ),

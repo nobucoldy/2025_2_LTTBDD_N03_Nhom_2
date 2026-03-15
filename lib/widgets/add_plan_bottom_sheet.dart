@@ -10,9 +10,12 @@ import '../widgets/info_chip.dart';
 import '../widgets/phase_item.dart';
 import '../utils/category_picker.dart';
 import '../utils/date_picker.dart';
+import '../data/language_data.dart';
 
 class AddPlanBottomSheet extends StatefulWidget {
-  const AddPlanBottomSheet({super.key});
+  final String locale;
+
+  const AddPlanBottomSheet({super.key, required this.locale});
 
   @override
   State<AddPlanBottomSheet> createState() => _AddPlanBottomSheetState();
@@ -25,9 +28,14 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final List<PhaseModel> _phases = [
-    PhaseModel(title: 'Giai đoạn 1', tasks: []),
-  ];
+  late List<PhaseModel> _phases;
+  String t(String key) => localizedText[widget.locale]?[key] ?? key;
+
+  @override
+  void initState() {
+    super.initState();
+    _phases = [PhaseModel(title: '${t('add_phase_name')} 1', tasks: [])];
+  }
 
   final GlobalKey _categoryKey = GlobalKey();
   final List<IconData> _quickIcons = [
@@ -86,15 +94,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                   const SizedBox(height: 15),
                   _buildTopActions(),
                   const SizedBox(height: 25),
-                  const Text(
-                    "LỘ TRÌNH THỰC HIỆN",
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.grey,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
+                  Text(t('add_roadmap'), style: _sectionStyle()),
                   const SizedBox(height: 12),
                   _buildPhaseList(),
                   _buildAddPhaseButton(),
@@ -122,12 +122,18 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
     );
   }
 
+  TextStyle _sectionStyle() => const TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w800,
+    color: Colors.grey,
+    letterSpacing: 1.2,
+  );
   Widget _buildTitleInput() {
     return TextField(
       controller: _titleController,
       style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
       decoration: InputDecoration(
-        hintText: 'Tên kế hoạch của bạn...',
+        hintText: t('add_title_hint'),
         hintStyle: TextStyle(color: Colors.grey[400]),
         border: InputBorder.none,
       ),
@@ -147,21 +153,8 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
         controller: _descriptionController,
         maxLength: 100,
         maxLines: 1,
-        style: const TextStyle(fontSize: 14, color: Colors.black87),
-        textInputAction: TextInputAction.done,
-        onSubmitted: (value) {
-          setState(() {
-            _descriptionController.text = value.trim();
-          });
-          FocusScope.of(context).unfocus();
-        },
-
-        onTapOutside: (event) {
-          FocusScope.of(context).unfocus();
-        },
-
         decoration: InputDecoration(
-          hintText: 'Thêm ghi chú...',
+          hintText: t('add_note_hint'),
           hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
           border: InputBorder.none,
           counterText: "",
@@ -178,7 +171,6 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   Widget _buildTopActions() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
           width: 125,
@@ -186,19 +178,16 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
           child: InfoChip(
             key: _categoryKey,
             icon: _category?.icon ?? Icons.folder_open,
-            label: _category?.name ?? 'Thể loại',
+            label: _category != null ? t(_category!.name) : t('add_category'),
             color: Colors.purple[50]!,
             iconColor: Colors.purple,
             onTap: () async {
               final selected = await CategoryPickerService.show(
                 context: context,
                 anchorKey: _categoryKey,
+                locale: widget.locale, // Truyền locale vào picker
               );
-              if (selected == null) {
-                setState(() => _category = null);
-                return;
-              }
-              if (selected.id == 'add_new_id') {
+              if (selected?.id == 'add_new_id') {
                 _showAddCategoryDialog();
               } else {
                 setState(() => _category = selected);
@@ -207,35 +196,36 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
           ),
         ),
         const SizedBox(width: 8),
-        SizedBox(
-          width: 90,
-          height: 40,
-          child: InfoChip(
-            icon: Icons.calendar_today_rounded,
-            label: _startDate == null
-                ? 'Bắt đầu'
-                : "${_startDate!.day}/${_startDate!.month}",
-            color: Colors.orange[50]!,
-            iconColor: Colors.orange[700]!,
-            onTap: () => _pickDate(true),
-          ),
+        _dateChip(
+          _startDate,
+          t('add_start'),
+          Colors.orange,
+          () => _pickDate(true),
         ),
         const SizedBox(width: 8),
-
-        SizedBox(
-          width: 90,
-          height: 40,
-          child: InfoChip(
-            icon: Icons.arrow_forward_rounded,
-            label: _endDate == null
-                ? 'Kết thúc'
-                : "${_endDate!.day}/${_endDate!.month}",
-            color: Colors.blue[50]!,
-            iconColor: Colors.blue[700]!,
-            onTap: () => _pickDate(false),
-          ),
-        ),
+        _dateChip(_endDate, t('add_end'), Colors.blue, () => _pickDate(false)),
       ],
+    );
+  }
+
+  Widget _dateChip(
+    DateTime? date,
+    String label,
+    MaterialColor color,
+    VoidCallback onTap,
+  ) {
+    return SizedBox(
+      width: 90,
+      height: 40,
+      child: InfoChip(
+        icon: label == t('add_start')
+            ? Icons.calendar_today_rounded
+            : Icons.arrow_forward_rounded,
+        label: date == null ? label : "${date.day}/${date.month}",
+        color: color[50]!,
+        iconColor: color[700]!,
+        onTap: onTap,
+      ),
     );
   }
 
@@ -269,12 +259,15 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       onPressed: () {
         setState(() {
           _phases.add(
-            PhaseModel(title: 'Giai đoạn ${_phases.length + 1}', tasks: []),
+            PhaseModel(
+              title: '${t('add_phase_name')} ${_phases.length + 1}',
+              tasks: [],
+            ),
           );
         });
       },
       icon: const Icon(Icons.add_road_rounded),
-      label: const Text('Thêm giai đoạn mới'),
+      label: Text(t('add_new_phase')),
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(double.infinity, 48),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -297,8 +290,8 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
             borderRadius: BorderRadius.circular(18),
           ),
         ),
-        child: const Text(
-          'Tạo kế hoạch ngay',
+        child: Text(
+          t('add_btn_create'),
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
@@ -324,7 +317,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   void _savePlan() {
     if (_titleController.text.trim().isEmpty) {
-      AlertUtils.show(context, "Vui lòng nhập tên kế hoạch", isError: true);
+      AlertUtils.show(context, t('add_msg_input_name'), isError: true);
       return;
     }
 
@@ -343,7 +336,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
     if (start.isAfter(end)) {
       Fluttertoast.showToast(
-        msg: "Ngày kết thúc phải sau ngày bắt đầu",
+        msg: t('add_msg_date_error'),
         gravity: ToastGravity.TOP,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -371,7 +364,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: const Text("Tạo thể loại mới"),
+          title: Text(t('add_cat_dialog_title')),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -382,8 +375,8 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                 TextField(
                   controller: controller,
                   autofocus: true,
-                  decoration: const InputDecoration(
-                    hintText: "Tên thể loại...",
+                  decoration: InputDecoration(
+                    hintText: t('add_cat_hint'),
                     prefixIcon: Icon(Icons.edit_note),
                   ),
                 ),
@@ -406,7 +399,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                       children: [
                         Icon(selectedIcon, color: Colors.purple),
                         const SizedBox(width: 12),
-                        const Expanded(child: Text("Chọn biểu tượng đại diện")),
+                        Expanded(child: Text(t('add_cat_pick_icon'))),
                         Icon(
                           isPickerVisible
                               ? Icons.expand_less
@@ -470,7 +463,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text("Hủy"),
+              child: Text(t('btn_cancel')),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -492,7 +485,7 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                   Navigator.pop(ctx);
                 }
               },
-              child: const Text("Lưu lại"),
+              child: Text(t('add_btn_save')),
             ),
           ],
         ),

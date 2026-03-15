@@ -318,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.only(right: 8),
               child: GestureDetector(
                 onTap: () => setState(() => _selectedCategory = category),
-                child: filterChip(category.name, isSelected: isSelected),
+                child: filterChip(t(category.name), isSelected: isSelected),
               ),
             );
           }),
@@ -338,13 +338,13 @@ class _HomeScreenState extends State<HomeScreen> {
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
             ),
-            builder: (context) => const AddPlanBottomSheet(),
+            builder: (context) => AddPlanBottomSheet(locale: _locale),
           );
 
           setState(() {
             if (newPlan != null) {
               samplePlans.add(newPlan);
-              AlertUtils.show(context, "Đã tạo kế hoạch mới thành công!");
+              AlertUtils.show(context, t('add_plan_success'));
             }
           });
           return;

@@ -5,11 +5,11 @@ import '../utils/alert.dart';
 import '../widgets/info_chip.dart';
 import '../widgets/custom_date_picker.dart';
 import '../utils/category_picker.dart';
-import '../data/language_data.dart'; // Import từ điển
+import '../data/language_data.dart';
 
 class PlanDetailScreen extends StatefulWidget {
   final PlanModel plan;
-  final String locale; // Thêm locale
+  final String locale;
 
   const PlanDetailScreen({super.key, required this.plan, required this.locale});
 
@@ -21,7 +21,6 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
   late TextEditingController _titleController;
   final GlobalKey _categoryKey = GlobalKey();
 
-  // Hàm dịch nhanh
   String t(String key) => localizedText[widget.locale]?[key] ?? key;
 
   @override
@@ -58,7 +57,6 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                   DateTime.now(),
               referenceDate: widget.plan.startDate,
               onDateSelected: (date) {
-                // Logic xử lý ngày tháng giữ nguyên
                 DateTime currentStart = isStart
                     ? date
                     : (widget.plan.startDate ?? DateTime.now());
@@ -184,16 +182,21 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
         InfoChip(
           key: _categoryKey,
           icon: plan.category?.icon ?? Icons.folder_open,
-          label: plan.category?.name ?? t('all_cat'),
+          label: plan.category != null ? t(plan.category!.name) : t('all_cat'),
           color: Colors.purple[50]!,
           iconColor: Colors.purple,
           onTap: () async {
             final selected = await CategoryPickerService.show(
               context: context,
               anchorKey: _categoryKey,
+              locale: widget.locale,
             );
-            if (selected != null && selected.id != 'add_new_id')
+
+            if (selected != null && selected.id != 'add_new_id') {
               setState(() => plan.category = selected);
+            } else if (selected == null) {
+              setState(() => plan.category = null);
+            }
           },
         ),
         const SizedBox(width: 8),
