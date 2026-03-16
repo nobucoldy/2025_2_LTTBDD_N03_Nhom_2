@@ -47,19 +47,18 @@ Widget planCard(PlanModel plan, String locale) {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (plan.category != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 2),
-                        child: Text(
-                          t(plan.category!.name).toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: contentColor.withOpacity(0.7),
-                            letterSpacing: 1,
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 2),
+                      child: Text(
+                        "${plan.startDate?.day}/${plan.startDate?.month}/${plan.startDate?.year} - ${plan.endDate?.day}/${plan.endDate?.month}/${plan.endDate?.year}",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: contentColor.withOpacity(0.7),
+                          letterSpacing: 0.5,
                         ),
                       ),
+                    ),
                     Text(
                       t(plan.title),
                       style: TextStyle(
