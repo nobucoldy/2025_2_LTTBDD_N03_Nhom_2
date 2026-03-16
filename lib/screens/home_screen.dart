@@ -11,6 +11,7 @@ import '../data/plan_data.dart';
 import '../data/category_data.dart';
 import '../models/category_model.dart';
 import '../models/plan_model.dart';
+import 'dashboard_screen.dart';
 import 'plan_detail_screen.dart';
 import '../utils/plan_group.dart';
 
@@ -249,19 +250,21 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildTopBar(),
-            _buildCategoryFilter(),
-            const SizedBox(height: 10),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: _buildMainContent(),
+        child: _selectedIndex == 2
+            ? DashboardScreen(locale: _locale)
+            : Column(
+                children: [
+                  _buildTopBar(),
+                  _buildCategoryFilter(),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: _buildMainContent(),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
       bottomNavigationBar: _buildBottomNav(),
     );
