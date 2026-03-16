@@ -141,9 +141,10 @@ class _HomeScreenState extends State<HomeScreen> {
       key: ObjectKey(plan),
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
-        extentRatio: 0.45,
+        extentRatio: 0.3,
         children: [
           CustomSlidableAction(
+            padding: EdgeInsets.zero,
             onPressed: (context) {
               setState(() {
                 for (var phase in plan.phases) {
@@ -158,19 +159,26 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
             backgroundColor: Colors.transparent,
-            padding: EdgeInsets.zero,
-            child: _buildActionButton(
-              icon: Icons.check_circle_outline_rounded,
-              color: Colors.green,
-              label: '',
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.green,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.check, color: Colors.white, size: 24),
             ),
           ),
 
           CustomSlidableAction(
+            padding: EdgeInsets.zero,
             onPressed: (context) {
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   title: Text(t('confirm_delete_content')),
                   content: Text(
                     "${t('confirm_delete_title')} '${t(plan.title)}'?",
@@ -196,11 +204,18 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
             backgroundColor: Colors.transparent,
-            padding: EdgeInsets.zero,
-            child: _buildActionButton(
-              icon: Icons.delete_outline_rounded,
-              color: Colors.redAccent,
-              label: '',
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.redAccent,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.delete_outline_rounded,
+                color: Colors.white,
+                size: 24,
+              ),
             ),
           ),
         ],
@@ -221,21 +236,6 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         }),
       ),
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required Color color,
-    required String label,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(child: Icon(icon, color: color, size: 26)),
     );
   }
 
