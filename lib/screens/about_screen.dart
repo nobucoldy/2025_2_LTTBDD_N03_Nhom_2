@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart'; // Import thư viện này
 import '../data/language_data.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -6,9 +7,7 @@ class AboutScreen extends StatelessWidget {
 
   const AboutScreen({super.key, required this.locale});
 
-  String t(String key) {
-    return localizedText[locale]?[key] ?? key;
-  }
+  String t(String key) => localizedText[locale]?[key] ?? key;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,7 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text("Thông tin nhóm"),
+        title: Text(t('about_appbar_title')),
         centerTitle: true,
         backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
@@ -29,8 +28,9 @@ class AboutScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Phần Danh sách thành viên
             Text(
-              "Thành viên nhóm 2",
+              t('about_group_title'),
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -38,9 +38,64 @@ class AboutScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-
             _buildMemberTile('Nguyễn Quế Bắc', '23010574', isDark),
             _buildMemberTile('Hoàng Tuấn Kiệt', '23010517', isDark),
+
+            const SizedBox(height: 40),
+
+            // Phần Mã QR GitHub
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    t('about_github_link'),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white70 : Colors.black54,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: QrImageView(
+                      data:
+                          "https://github.com/nobucoldy/2025_2_LTTBDD_N03_Nhom_2.git",
+                      version: QrVersions.auto,
+                      size: 160.0,
+                      eyeStyle: const QrEyeStyle(
+                        eyeShape: QrEyeShape.square,
+                        color: Colors.black,
+                      ),
+                      dataModuleStyle: const QrDataModuleStyle(
+                        dataModuleShape: QrDataModuleShape.square,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    t('about_scan_hint'),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -62,7 +117,7 @@ class AboutScreen extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        'MSV: $mssv',
+        '${t('about_id_label')}: $mssv',
         style: TextStyle(color: isDark ? Colors.white60 : Colors.black54),
       ),
     );

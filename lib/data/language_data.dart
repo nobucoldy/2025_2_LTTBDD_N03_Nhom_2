@@ -120,6 +120,11 @@ const Map<String, Map<String, String>> localizedText = {
     'msg_min_phase_error': 'Phải có ít nhất một giai đoạn',
     'alert_error_title': 'Thông báo lỗi',
     'alert_success_title': 'Thành công',
+    'about_appbar_title': 'Thông tin nhóm',
+    'about_group_title': 'Thành viên nhóm 2',
+    'about_id_label': 'MSV',
+    'about_github_link': 'Liên kết GitHub (Mã nguồn)',
+    'about_scan_hint': 'Quét mã để xem mã nguồn',
   },
   'en': {
     'title': 'Plans',
@@ -242,5 +247,10 @@ const Map<String, Map<String, String>> localizedText = {
     'msg_min_phase_error': 'At least one phase is required',
     'alert_error_title': 'Error Notification',
     'alert_success_title': 'Success',
+    'about_appbar_title': 'Group Information',
+    'about_group_title': 'Group 2 Members',
+    'about_id_label': 'ID',
+    'about_github_link': 'GitHub Repository (Source Code)',
+    'about_scan_hint': 'Scan to view Source Code',
   },
 };
