@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart'; // Import thư viện này
+import 'package:qr_flutter/qr_flutter.dart';
 import '../data/language_data.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -28,7 +28,6 @@ class AboutScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Phần Danh sách thành viên
             Text(
               t('about_group_title'),
               style: TextStyle(
@@ -43,7 +42,6 @@ class AboutScreen extends StatelessWidget {
 
             const SizedBox(height: 40),
 
-            // Phần Mã QR GitHub
             Center(
               child: Column(
                 children: [

@@ -93,6 +93,45 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
     );
   }
 
+  void _confirmDeleteTask(BuildContext context, PhaseModel phase, int index) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(t('confirm_delete_content')),
+        content: Text(
+          "${t('confirm_delete_title')} '${phase.tasks[index].title}'?",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(t('btn_cancel')),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                phase.tasks.removeAt(index);
+              });
+              Navigator.pop(ctx);
+              AlertUtils.show(
+                context,
+                t('msg_success_delete'),
+                locale: widget.locale,
+              );
+            },
+            child: Text(
+              t('btn_delete'),
+              style: const TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildHandleBar(bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12),
@@ -388,12 +427,10 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
             height: 20,
             color: isDark ? Colors.white10 : Colors.grey[300],
           ),
-          // Cập nhật danh sách nhiệm vụ (Tasks)
           Column(
             children: List.generate(phase.tasks.length, (index) {
               final task = phase.tasks[index];
               return Padding(
-                // SỬA TẠI ĐÂY: Thêm Key để Flutter không bị nhầm lẫn dữ liệu
                 key: ObjectKey(task),
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: Row(
@@ -412,7 +449,6 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: TextFormField(
-                        // SỬA TẠI ĐÂY: Dùng controller hoặc đảm bảo dữ liệu đồng bộ
                         initialValue: task.title,
                         style: TextStyle(
                           fontSize: 14,
@@ -427,18 +463,14 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                           border: InputBorder.none,
                           isDense: true,
                         ),
-                        // Cập nhật dữ liệu ngay lập tức vào Model
                         onChanged: (val) => task.title = val,
                       ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.remove_circle_outline, size: 18),
                       color: isDark ? Colors.white24 : Colors.grey[400],
-                      onPressed: () {
-                        setState(() {
-                          phase.tasks.removeAt(index);
-                        });
-                      },
+                      onPressed: () =>
+                          _confirmDeleteTask(context, phase, index),
                       constraints: const BoxConstraints(),
                       padding: EdgeInsets.zero,
                     ),
