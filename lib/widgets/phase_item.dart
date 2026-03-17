@@ -106,8 +106,11 @@ class _PhaseItemState extends State<PhaseItem> {
             height: 24,
             color: isDark ? Colors.white10 : Colors.grey[300],
           ),
-          ...widget.phase.tasks.map(
-            (task) => Padding(
+          ...widget.phase.tasks.asMap().entries.map((entry) {
+            int taskIndex = entry.key;
+            var task = entry.value;
+
+            return Padding(
               padding: const EdgeInsets.only(bottom: 8, left: 4),
               child: Row(
                 children: [
@@ -126,10 +129,53 @@ class _PhaseItemState extends State<PhaseItem> {
                       ),
                     ),
                   ),
+                  IconButton(
+                    icon: const Icon(Icons.close_rounded, size: 16),
+                    visualDensity: VisualDensity.compact,
+                    color: isDark ? Colors.white24 : Colors.grey,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: Text(t('confirm_delete_content')),
+                          content: Text(
+                            "${t('confirm_delete_title')} '${task.title}'?",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(ctx),
+                              child: Text(t('btn_cancel')),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  widget.phase.tasks.removeAt(taskIndex);
+                                });
+                                Navigator.pop(ctx);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(t('msg_success_delete')),
+                                    duration: const Duration(seconds: 1),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                t('btn_delete'),
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
-            ),
-          ),
+            );
+          }),
 
           if (_isAddingTask)
             TextField(

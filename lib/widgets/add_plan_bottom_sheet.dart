@@ -252,7 +252,43 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
             () => entry.value.tasks.add(TaskModel(title: taskTitle)),
           ),
           onDeletePhase: () {
-            if (_phases.length > 1) setState(() => _phases.removeAt(entry.key));
+            if (_phases.length > 1) {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  title: Text(t('confirm_delete_content')),
+                  content: Text(
+                    "${t('confirm_delete_title')} '${entry.value.title}'?",
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Text(t('btn_cancel')),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() => _phases.removeAt(entry.key));
+                        Navigator.pop(ctx);
+                        AlertUtils.show(context, t('msg_success_delete'));
+                      },
+                      child: Text(
+                        t('btn_delete'),
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              AlertUtils.show(
+                context,
+                "Phải có ít nhất một giai đoạn",
+                isError: true,
+              );
+            }
           },
         );
       }).toList(),
