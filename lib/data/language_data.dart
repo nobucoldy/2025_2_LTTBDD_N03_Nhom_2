@@ -118,6 +118,8 @@ const Map<String, Map<String, String>> localizedText = {
     'confirm_complete_msg':
         'Bạn có chắc chắn muốn đánh dấu hoàn thành toàn bộ kế hoạch',
     'msg_min_phase_error': 'Phải có ít nhất một giai đoạn',
+    'alert_error_title': 'Thông báo lỗi',
+    'alert_success_title': 'Thành công',
   },
   'en': {
     'title': 'Plans',
@@ -238,5 +240,7 @@ const Map<String, Map<String, String>> localizedText = {
     'confirm_complete_msg':
         'Are you sure you want to mark the entire plan as completed',
     'msg_min_phase_error': 'At least one phase is required',
+    'alert_error_title': 'Error Notification',
+    'alert_success_title': 'Success',
   },
 };

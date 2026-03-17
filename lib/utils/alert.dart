@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import '../data/language_data.dart';
 
 class AlertUtils {
   static void show(
     BuildContext context,
     String message, {
     bool isError = false,
+    String locale = 'vi',
   }) {
+    String t(String key) => localizedText[locale]?[key] ?? key;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -21,7 +25,7 @@ class AlertUtils {
                 color: isError ? Colors.red : Colors.green,
               ),
               const SizedBox(width: 10),
-              Text(isError ? "Thông báo lỗi" : "Thành công"),
+              Text(isError ? t('alert_error_title') : t('alert_success_title')),
             ],
           ),
           content: Text(message, style: const TextStyle(fontSize: 15)),
@@ -29,7 +33,7 @@ class AlertUtils {
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
-                "ĐÓNG",
+                t('btn_close'),
                 style: TextStyle(
                   color: isError ? Colors.red : Colors.purple,
                   fontWeight: FontWeight.bold,

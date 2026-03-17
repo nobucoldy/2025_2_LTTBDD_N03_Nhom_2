@@ -257,7 +257,12 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
             if (_phases.length > 1) {
               _confirmDeletePhase(context, phase, index);
             } else {
-              AlertUtils.show(context, t('msg_min_phase_error'), isError: true);
+              AlertUtils.show(
+                context,
+                t('msg_min_phase_error'),
+                isError: true,
+                locale: widget.locale,
+              );
             }
           },
         );
@@ -288,7 +293,11 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
                 });
                 Navigator.of(ctx).pop();
 
-                AlertUtils.show(context, t('msg_success_delete'));
+                AlertUtils.show(
+                  context,
+                  t('msg_success_delete'),
+                  locale: widget.locale,
+                );
               },
               child: Text(
                 t('btn_delete'),
@@ -369,7 +378,12 @@ class _AddPlanBottomSheetState extends State<AddPlanBottomSheet> {
 
   void _savePlan() {
     if (_titleController.text.trim().isEmpty) {
-      AlertUtils.show(context, t('add_msg_input_name'), isError: true);
+      AlertUtils.show(
+        context,
+        t('add_msg_input_name'),
+        isError: true,
+        locale: widget.locale,
+      );
       return;
     }
 
