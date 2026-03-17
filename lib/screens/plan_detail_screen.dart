@@ -7,6 +7,7 @@ import '../utils/category_picker.dart';
 import '../widgets/info_chip.dart';
 import '../widgets/custom_date_picker.dart';
 import '../data/language_data.dart';
+import '../models/task_model.dart';
 
 class PlanDetailScreen extends StatefulWidget {
   final PlanModel plan;
@@ -23,6 +24,19 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
   final GlobalKey _categoryKey = GlobalKey();
 
   String t(String key) => localizedText[widget.locale]?[key] ?? key;
+  int? _addingTaskToPhaseIndex;
+  final TextEditingController _newTaskController = TextEditingController();
+
+  void _addNewPhase() {
+    setState(() {
+      widget.plan.phases.add(
+        PhaseModel(
+          title: "${t('add_phase_name')} ${widget.plan.phases.length + 1}",
+          tasks: [],
+        ),
+      );
+    });
+  }
 
   @override
   void initState() {
@@ -200,6 +214,8 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                   ...plan.phases.map(
                     (phase) => _buildPhaseDetail(phase, theme),
                   ),
+                  const SizedBox(height: 12),
+                  _buildAddPhaseButton(isDark),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -399,6 +415,8 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
   );
   Widget _buildPhaseDetail(PhaseModel phase, ThemeData theme) {
     final isDark = theme.brightness == Brightness.dark;
+    int phaseIndex = widget.plan.phases.indexOf(phase);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(16),
@@ -410,23 +428,49 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextFormField(
-            initialValue: t(phase.title),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: isDark ? Colors.white : Colors.black,
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              isDense: true,
-            ),
-            onChanged: (val) => phase.title = val,
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  initialValue: phase.title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    isDense: true,
+                  ),
+                  onChanged: (val) => phase.title = val,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.delete_outline,
+                  size: 20,
+                  color: Colors.redAccent,
+                ),
+                onPressed: () {
+                  if (widget.plan.phases.length > 1) {
+                    setState(() => widget.plan.phases.removeAt(phaseIndex));
+                  } else {
+                    AlertUtils.show(
+                      context,
+                      t('msg_min_phase_error'),
+                      isError: true,
+                      locale: widget.locale,
+                    );
+                  }
+                },
+              ),
+            ],
           ),
           Divider(
             height: 20,
             color: isDark ? Colors.white10 : Colors.grey[300],
           ),
+
           Column(
             children: List.generate(phase.tasks.length, (index) {
               final task = phase.tasks[index];
@@ -441,9 +485,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                       child: Checkbox(
                         value: task.isDone,
                         activeColor: Colors.purple,
-                        onChanged: (val) {
-                          setState(() => task.isDone = val!);
-                        },
+                        onChanged: (val) => setState(() => task.isDone = val!),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -479,7 +521,55 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
               );
             }),
           ),
+
+          if (_addingTaskToPhaseIndex == phaseIndex)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: TextField(
+                controller: _newTaskController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: t('add_task_hint'),
+                  hintStyle: const TextStyle(fontSize: 13),
+                  border: InputBorder.none,
+                ),
+                onSubmitted: (val) {
+                  if (val.trim().isNotEmpty) {
+                    setState(() {
+                      phase.tasks.add(TaskModel(title: val.trim()));
+                      _newTaskController.clear();
+                      _addingTaskToPhaseIndex = null;
+                    });
+                  } else {
+                    setState(() => _addingTaskToPhaseIndex = null);
+                  }
+                },
+              ),
+            )
+          else
+            TextButton.icon(
+              onPressed: () =>
+                  setState(() => _addingTaskToPhaseIndex = phaseIndex),
+              icon: const Icon(Icons.add, size: 18),
+              label: Text(t('add_task')),
+            ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAddPhaseButton(bool isDark) {
+    return OutlinedButton.icon(
+      onPressed: _addNewPhase,
+      icon: const Icon(Icons.add_road_rounded),
+      label: Text(t('add_new_phase')),
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 48),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        side: BorderSide(
+          color: isDark ? Colors.purple.withOpacity(0.3) : Colors.purple[100]!,
+        ),
+        foregroundColor: isDark ? Colors.purple[200] : Colors.purple,
       ),
     );
   }
